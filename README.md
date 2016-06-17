@@ -1,20 +1,28 @@
 # Gatling
 
-**TODO: Add description**
+Conveniently deploy a bunch of elixir plug apps
 
-## Installation
+The main goal of Gatling is to make it very easy, cheap, and convenient 
+to deploy Phoenix apps.
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed as:
+## Instructions
 
-  1. Add gatling to your list of dependencies in `mix.exs`:
+### Setting up the server
 
-        def deps do
-          [{:gatling, "~> 0.0.1"}]
-        end
+- Setup an UbuntuCore server anywhere [instructions](https://feliciano.tech/blog/running-ubuntu-snappy-core-on-linode/)
+- Install this gatling Snap
 
-  2. Ensure gatling is started before your application:
+### Deploying your app
 
-        def application do
-          [applications: [:gatling]]
-        end
+For a brand new project:
 
+- SSH into your server
+- `$mix gatling.load <repo_name>
+
+- Ensure your elixir project can build a release with Exrm
+- Add a file to the root of your project named `gatling.domains` and
+add a list of all the domains you want this point to your project.
+- `git remote add production git@<address.to.server>:<project_name>.git`
+- `git push production master`
+
+Thats it!!! You are live.
