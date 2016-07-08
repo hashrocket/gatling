@@ -1,2 +1,0 @@
-defmodule Gatling do
-end

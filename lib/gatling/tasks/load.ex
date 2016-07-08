@@ -3,7 +3,7 @@ defmodule Mix.Tasks.Gatling.Load do
 
   import Mix.Shell.IO, only: [prompt: 1, info: 1]
 
-  @deploy_dir System.user_home
+  @working_dir System.user_home
 
   def run([]) do
     project_name = prompt("Please enter a project name:")
@@ -27,7 +27,7 @@ defmodule Mix.Tasks.Gatling.Load do
 
   defp dir(project_name) do
     project = String.strip(project_name)
-    @deploy_dir |> Path.join(project)
+    @working_dir |> Path.join(project)
   end
 
 end
