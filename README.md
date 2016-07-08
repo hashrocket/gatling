@@ -17,7 +17,7 @@ to deploy Phoenix apps.
 For a brand new project:
 
 - SSH into your server
-- `$mix gatling.load <repo_name>
+- `$mix gatling.load [repo_name]
 
 - Ensure your elixir project can build a release with Exrm
 - Add a file to the root of your project named `gatling.domains` and

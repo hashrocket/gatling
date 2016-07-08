@@ -15,7 +15,7 @@ defmodule Mix.Tasks.Gatling.Load do
   end
 
   def load(project_name) do
-    dir = dir = dir(project_name) 
+    dir = dir(project_name) 
     if File.exists?(dir) do
       info ~s(-> #{dir} already exists)
     else
