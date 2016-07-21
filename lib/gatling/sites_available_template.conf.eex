@@ -1,6 +1,6 @@
 server {
   listen 80;
-  server_name <%= domains %>;
+  server_name <%= @domains %>;
 
   location / {
     proxy_set_header X-Real-IP $remote_addr;

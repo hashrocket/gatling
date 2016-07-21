@@ -19,10 +19,10 @@ defmodule Mix.Tasks.Gatling.Upgrade do
     release_from = Path.join([build_path, "rel", project, "releases", version, "#{project}.tar.gz"])
 
     File.mkdir(deploy_to)
-    info "Created #{deploy_to}"
+    IO.write "Created #{deploy_to}"
 
-    File.mv(release_from, deploy_to)
-    info "Copied #{release_from} -> #{deploy_to}"
+    File.cp(release_from, deploy_to)
+    IO.write "Copied #{release_from} -> #{deploy_to}"
 
     System.cmd("sudo", ["service", project, "upgrade", version])
     |> elem(0) |> IO.write()
