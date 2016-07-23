@@ -1,6 +1,8 @@
 defmodule Mix.Tasks.Gatling.Deploy do
   require EEx
 
+  import Gatling.Bash, only: [bash: 3, bash: 2]
+
   @module """
   - Create a release of git HEAD using Exrm
   - Create a init script for the app so it will reboot on a server reboot
@@ -8,48 +10,86 @@ defmodule Mix.Tasks.Gatling.Deploy do
   - Start the app
   """
 
+  def run([]) do
+    build_path = Mix.Shell.IO.prompt("Please enter the path to your project:") 
+                  |> String.trim()
+    deploy(build_path)
+  end
+
   def run([build_path]) do
-    project       = build_path |> Path.basename()
-    deploy_path   = Path.join([System.user_home, "deployments", project])
-    releases_path = Path.join([build_path, "rel", project, "releases"])
-    port          = available_port
+    deploy(build_path)
+  end
 
-    sha = System.cmd("git", ["rev-parse", "--short", "HEAD"], cd: build_path)
-          |> elem(0) |> String.trim()
+  def deploy(build_path) do
+    project      = Path.basename(build_path)
+    deploy_path  = Path.join([System.user_home, "deployments", project])
+    port         = available_port
 
-    System.cmd("git", ["reset", "--hard"]) |> elem(0) |> IO.write()
-    System.cmd("mix", ["deps.get"], cd: build_path) |> elem(0) |> IO.write()
-    System.cmd("mix", ["compile"], cd: build_path)  |> elem(0) |> IO.write()
-    System.cmd("mix", ["release"], cd: build_path)  |> elem(0) |> IO.write()
-
-    version  = File.ls!(releases_path)
-             |> Enum.find(fn(path) -> Regex.match?(~r/#{sha}$/, path) end)
-
-    release_from = Path.join([
-      build_path, "rel", project, "releases", version, "#{project}.tar.gz"
-    ])
-
-    File.mkdir(deploy_path)
-    IO.write "Created #{deploy_path}"
-
-    File.cp(release_from, deploy_path)
-    IO.write "Copied #{release_from} -> #{deploy_path}"
-
-    System.cmd("tar", ["-xf", "#{project}.tar.gz", cd: deploy_path])
-    IO.write "Expanded #{project}.tar.gz in #{deploy_path}"
-
+    git_reset_hard(build_path)
+    mix_deps_get(build_path)
+    mix_compile(build_path)
+    mix_release(build_path)
+    make_deploy_dir(deploy_path)
+    copy_release_to_deploy(release_from(build_path), deploy_path)
+    expand_release(project, deploy_path)
     install_nginx_site(build_path, port)
     install_init_script(project, port)
+    start_service(project)
+  end
 
-    System.cmd("sudo", ["service", project, "start"])
+  def git_reset_hard(build_path) do
+    bash("git", ["reset", "--hard"], cd: build_path)
+  end
+
+  def mix_deps_get(build_path) do
+    bash("mix", ["deps.get"], cd: build_path)
+  end
+
+  def mix_compile(build_path) do
+    bash("mix", ["compile"], cd: build_path)
+  end
+
+  def mix_release(build_path) do
+    bash("mix", ["release", "--no-confirm-missing"], cd: build_path)
+  end
+
+  def release_from(build_path) do
+    project = Path.basename(build_path)
+    sha     = git_sha(build_path)
+    version = Path.join([build_path, "rel", project, "releases"])
+              |> File.ls!()
+              |> Enum.find(fn(path) -> Regex.match?(~r/#{sha}$/, path) end)
+    [build_path, "rel", project, "releases", version, "#{project}.tar.gz"]
+    |> Path.join()
+  end
+
+  def git_sha(build_path) do
+    System.cmd("git", ["rev-parse", "--short", "HEAD"], cd: build_path)
+    |> elem(0) |> String.trim()
+  end
+
+  def make_deploy_dir(deploy_path) do
+    File.mkdir(deploy_path)
+  end
+
+  def copy_release_to_deploy(release_from, deploy_path) do
+    File.cp(release_from, deploy_path)
+  end
+
+  def expand_release(project, deploy_path) do
+    bash("tar", ["-xf", "#{project}.tar.gz", cd: deploy_path])
   end
 
   def install_init_script(project_name, port) do
     file      = script_template(project_name: project_name, port: port)
     init_path = "/etc/init.d/#{project_name}.sh"
     File.write(init_path, file)
-    File.chmod(init_path, 00100)
-    System.cmd("update-rc.d", [project_name, "--defaults"])
+    File.chmod(init_path, 0100)
+    bash("update-rc.d", [project_name, "--defaults"])
+  end
+
+  def start_service(project) do
+    bash("sudo", ["service", project, "start"])
   end
 
   def install_nginx_site(build_path, port) do
@@ -57,10 +97,9 @@ defmodule Mix.Tasks.Gatling.Deploy do
     file         = nginx_template( domains: domains(build_path), port: port,)
     available    = "/etc/init.d/nginx/sites-available/#{project_name}"
     enabled      = "/etc/init.d/nginx/sites-enabled/#{project_name}"
-
     File.write(available, file)
     File.ln_s(available, enabled)
-    System.cmd("nginx", ["-s", "reload"])
+    bash("nginx", ["-s", "reload"])
   end
 
   def domains(build_path) do
@@ -88,6 +127,5 @@ defmodule Mix.Tasks.Gatling.Deploy do
     __DIR__ |> Path.dirname |> Path.join("sites_available_template.conf.eex"),
     [:assigns]
   )
-
 
 end

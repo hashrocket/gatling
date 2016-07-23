@@ -1,0 +1,2 @@
+defmodule Gatling do
+end
