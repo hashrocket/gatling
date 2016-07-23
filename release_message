@@ -1,0 +1,9 @@
+[33mBuilding release with MIX_ENV=dev.[0m
+[33m
+You have dependencies (direct/transitive) which are not in :applications!
+The following apps should be added to :applications in mix.exs:
+
+        phoenix_live_reload => phoenix_live_reload is missing from xa[0m
+
+==> [32mThe release for xa-0.0.0-git-01f2f0e is ready![0m
+==> [32mYou can boot a console running your release with `$ rel/xa/bin/xa console`[0m

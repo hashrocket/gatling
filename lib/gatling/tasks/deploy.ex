@@ -28,9 +28,11 @@ defmodule Mix.Tasks.Gatling.Deploy do
     git_reset_hard(build_path)
     mix_deps_get(build_path)
     mix_compile(build_path)
-    mix_release(build_path)
     make_deploy_dir(deploy_path)
-    copy_release_to_deploy(release_from(build_path), deploy_path)
+
+    release_version = mix_release(build_path)
+    copy_release_to_deploy(build_path, deploy_path, release_version)
+
     expand_release(project, deploy_path)
     install_nginx_site(build_path, port)
     install_init_script(project, port)
@@ -46,21 +48,13 @@ defmodule Mix.Tasks.Gatling.Deploy do
   end
 
   def mix_compile(build_path) do
-    bash("mix", ["compile"], cd: build_path)
+    bash("mix", ["compile", "--no-archives-check", "--no-deps-check"], cd: build_path)
   end
 
   def mix_release(build_path) do
-    bash("mix", ["release", "--no-confirm-missing"], cd: build_path)
-  end
-
-  def release_from(build_path) do
-    project = Path.basename(build_path)
-    sha     = git_sha(build_path)
-    version = Path.join([build_path, "rel", project, "releases"])
-              |> File.ls!()
-              |> Enum.find(fn(path) -> Regex.match?(~r/#{sha}$/, path) end)
-    [build_path, "rel", project, "releases", version, "#{project}.tar.gz"]
-    |> Path.join()
+    release_message = bash("mix", ["release", "--no-confirm-missing"], cd: build_path)
+    Regex.named_captures(~r/(?<version>\d+\.\d+\.\d\S+)/, release_message)
+    |> Map.fetch!("version")
   end
 
   def git_sha(build_path) do
@@ -69,11 +63,16 @@ defmodule Mix.Tasks.Gatling.Deploy do
   end
 
   def make_deploy_dir(deploy_path) do
-    File.mkdir(deploy_path)
+    File.mkdir_p(deploy_path)
   end
 
-  def copy_release_to_deploy(release_from, deploy_path) do
-    File.cp(release_from, deploy_path)
+  def copy_release_to_deploy(build_path, deploy_path, version) do
+    project     = Path.basename(build_path)
+    deploy_path = Path.join(deploy_path, "#{project}.tar.gz")
+
+    [build_path, "rel", project, "releases", version, "#{project}.tar.gz"]
+    |> Path.join()
+    |> File.cp(deploy_path)
   end
 
   def expand_release(project, deploy_path) do
