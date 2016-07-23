@@ -1,12 +1,12 @@
 defmodule Mix.Tasks.Gatling.Load do
   use Mix.Task
 
-  import Mix.Shell.IO, only: [prompt: 1, info: 1]
+  import Gatling.Bash, only: [bash: 3, bash: 2]
 
-  @working_dir System.user_home
+  @build_path System.user_home
 
   def run([]) do
-    project_name = prompt("Please enter a project name:")
+    project_name = Mix.Shell.IO.prompt("Please enter a project name:")
     load(project_name)
   end
 
@@ -20,14 +20,13 @@ defmodule Mix.Tasks.Gatling.Load do
       info ~s(-> #{dir} already exists)
     else
       File.mkdir_p!(dir)
-      System.cmd("git", ["init", dir])
-      info ~s(-> #{dir} created)
+      bash("git", ["init", dir])
     end
   end
 
   defp dir(project_name) do
     project = String.strip(project_name)
-    @working_dir |> Path.join(project)
+    @build_path |> Path.join(project)
   end
 
 end
