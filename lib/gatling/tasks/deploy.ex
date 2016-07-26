@@ -48,8 +48,8 @@ defmodule Mix.Tasks.Gatling.Deploy do
   end
 
   def mix_compile(build_path) do
-    bash("mix", ["local", "rebar", "--force"], cd: build_path)
-    bash("mix", ["compile", "--no-archives-check", "--no-deps-check"], cd: build_path)
+    bash("mix", ["local.rebar", "--force"], cd: build_path)
+    bash("mix", ["compile", "--force"], cd: build_path)
   end
 
   def mix_release(build_path) do
