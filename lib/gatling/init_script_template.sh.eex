@@ -11,6 +11,6 @@
 
 export MIX_ENV=prod
 export PORT=<%= @port %>
-export HOME=/app/<%= @project_name %>
+export HOME=<%= System.user_home %>/deployments/<%= @project_name %>
 
-/app/<%=@project_name%>/bin/<%=@project_name%> "$1"
+<%= System.user_home %>/deployments/<%=@project_name%>/bin/<%=@project_name%> "$1" "$2"
