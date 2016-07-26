@@ -95,8 +95,8 @@ defmodule Mix.Tasks.Gatling.Deploy do
   def install_nginx_site(build_path, port) do
     project_name = build_path |> Path.basename()
     file         = nginx_template( domains: domains(build_path), port: port,)
-    available    = "/etc/init.d/nginx/sites-available/#{project_name}"
-    enabled      = "/etc/init.d/nginx/sites-enabled/#{project_name}"
+    available    = "/etc/nginx/sites-available/#{project_name}"
+    enabled      = "/etc/nginx/sites-enabled/#{project_name}"
     File.write(available, file)
     File.ln_s(available, enabled)
     bash("nginx", ["-s", "reload"])
