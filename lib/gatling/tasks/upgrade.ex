@@ -19,12 +19,12 @@ defmodule Mix.Tasks.Gatling.Upgrade do
     Deploy.mix_deps_get(build_path)
     Deploy.mix_compile(build_path)
 
-    project     = Path.basename(build_path)
-    version     = Deploy.mix_release(build_path)
-    deploy_path = Path.join([System.user_home, "deployments", project, version])
+    project   = Path.basename(build_path)
+    version   = Deploy.mix_release(build_path)
+    deploy_to = Path.join([System.user_home, "deployments", project, "releases", version])
 
-    Deploy.make_deploy_dir(deploy_path)
-    Deploy.copy_release_to_deploy(build_path, deploy_path, version)
+    Deploy.make_deploy_dir(deploy_to)
+    Deploy.copy_release_to_deploy(build_path, deploy_to, version)
 
     upgrade_service(project, version)
   end
