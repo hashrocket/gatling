@@ -25,7 +25,6 @@ defmodule Mix.Tasks.Gatling.Deploy do
     deploy_path  = Path.join([System.user_home, "deployments", project])
     port         = available_port
 
-    git_reset_hard(build_path)
     mix_deps_get(build_path)
     mix_compile(build_path)
     make_deploy_dir(deploy_path)
@@ -37,10 +36,6 @@ defmodule Mix.Tasks.Gatling.Deploy do
     install_nginx_site(build_path, port)
     install_init_script(project, port)
     start_service(project, port)
-  end
-
-  def git_reset_hard(build_path) do
-    bash("git", ["reset", "--hard"], cd: build_path)
   end
 
   def mix_deps_get(build_path) do

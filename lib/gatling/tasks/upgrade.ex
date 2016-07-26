@@ -15,7 +15,6 @@ defmodule Mix.Tasks.Gatling.Upgrade do
 
   def upgrade(build_path) do
 
-    Deploy.git_reset_hard(build_path)
     Deploy.mix_deps_get(build_path)
     Deploy.mix_compile(build_path)
 
