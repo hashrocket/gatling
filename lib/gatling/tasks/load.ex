@@ -1,7 +1,7 @@
 defmodule Mix.Tasks.Gatling.Load do
   use Mix.Task
 
-  import Gatling.Bash, only: [bash: 2, log: 1]
+  import Gatling.Bash, only: [bash: 3, log: 1]
 
   @build_path System.user_home
 
@@ -20,7 +20,8 @@ defmodule Mix.Tasks.Gatling.Load do
       log(~s(-> #{dir} already exists))
     else
       File.mkdir_p!(dir)
-      bash("git", ["init", dir])
+      template_dir = File.join(Mix.Project.app_path, "git_template")
+      bash("git", ["init", dir], env: [ {"GIT_TEMPLATE_DIR", template_dir} ])
     end
   end
 

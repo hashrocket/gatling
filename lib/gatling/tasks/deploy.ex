@@ -1,4 +1,5 @@
 defmodule Mix.Tasks.Gatling.Deploy do
+  use Mix.Task
   require EEx
 
   import Gatling.Bash, only: [bash: 3, bash: 2]
@@ -11,7 +12,7 @@ defmodule Mix.Tasks.Gatling.Deploy do
   """
 
   def run([]) do
-    build_path = Mix.Shell.IO.prompt("Please enter the path to your project:") 
+    build_path = Mix.Shell.IO.prompt("Please enter the path to your project:")
                   |> String.trim()
     deploy(build_path)
   end
