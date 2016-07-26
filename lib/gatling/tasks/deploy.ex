@@ -36,7 +36,7 @@ defmodule Mix.Tasks.Gatling.Deploy do
     expand_release(project, deploy_path)
     install_nginx_site(build_path, port)
     install_init_script(project, port)
-    start_service(project)
+    start_service(project, port)
   end
 
   def git_reset_hard(build_path) do
@@ -88,8 +88,8 @@ defmodule Mix.Tasks.Gatling.Deploy do
     bash("update-rc.d", [project_name, "defaults"])
   end
 
-  def start_service(project) do
-    bash("sudo", ["service", project, "start"])
+  def start_service(project, port) do
+    bash("sudo", ["service", project, "start"], env: [{"PORT", to_string(port)}])
   end
 
   def install_nginx_site(build_path, port) do
