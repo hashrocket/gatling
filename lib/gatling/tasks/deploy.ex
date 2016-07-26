@@ -77,7 +77,7 @@ defmodule Mix.Tasks.Gatling.Deploy do
   end
 
   def expand_release(project, deploy_path) do
-    bash("tar", ["-xf", "#{project}.tar.gz", cd: deploy_path])
+    bash("tar", ["-xf", "#{project}.tar.gz"], cd: deploy_path)
   end
 
   def install_init_script(project_name, port) do
