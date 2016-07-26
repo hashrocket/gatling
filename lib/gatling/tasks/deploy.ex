@@ -44,7 +44,7 @@ defmodule Mix.Tasks.Gatling.Deploy do
   end
 
   def mix_deps_get(build_path) do
-    bash("mix", ["deps.get", "--no-archives-check"], cd: build_path)
+    bash("mix", ["deps.get", "--no-archives-check", "--only=prod"], cd: build_path)
   end
 
   def mix_compile(build_path) do
