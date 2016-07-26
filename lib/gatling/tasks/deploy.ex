@@ -77,13 +77,12 @@ defmodule Mix.Tasks.Gatling.Deploy do
   end
 
   def expand_release(project, deploy_path) do
-    require IEx; IEx.pry
     bash("tar", ["-xf", "#{project}.tar.gz"], cd: deploy_path)
   end
 
   def install_init_script(project_name, port) do
     file      = script_template(project_name: project_name, port: port)
-    init_path = "/etc/init.d/#{project_name}.sh"
+    init_path = "/etc/init.d/#{project_name}"
     File.write(init_path, file)
     File.chmod(init_path, 0100)
     bash("update-rc.d", [project_name, "defaults"])
