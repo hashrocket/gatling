@@ -1,7 +1,7 @@
 defmodule Mix.Tasks.Gatling.Load do
   use Mix.Task
 
-  import Gatling.Bash, only: [bash: 3, bash: 2, log: 1]
+  import Gatling.Bash, only: [bash: 2, log: 1]
 
   @build_path System.user_home
 
