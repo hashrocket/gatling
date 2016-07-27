@@ -1,7 +1,7 @@
 defmodule Gatling.Utilities do
 
-  def nginx_path, do:  Application.get_env(:gatling, :deploy_path)
-  def etc_path,   do:  Application.get_env(:gatling, :deploy_path)
+  def nginx_path, do: Application.get_env(:gatling, :nginx_path)
+  def etc_path,   do: Application.get_env(:gatling, :etc_path)
 
   def build_path(project_name) do
     project   = String.strip(project_name)

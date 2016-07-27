@@ -47,10 +47,10 @@ defmodule Gatling.Mixfile do
     ]
   end
 
-  defp aliases(:dev), do: []
   defp aliases(:prod) do
     [ build: ["compile", "archive.build", &release/1] ]
   end
+  defp aliases(_), do: []
 
   defp release(_) do
     filename = "#{project[:app]}-#{project[:version]}.ez"
