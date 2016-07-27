@@ -26,8 +26,8 @@ defmodule Mix.Tasks.Gatling.Deploy do
 
   def deploy(build_path) do
     project      = Path.basename(build_path)
-    deploy_path  = Path.join([System.user_home, "deployments", project])
-    port         = available_port
+    deploy_path  = Gatling.Utilities.deploy_path(project)
+    port         = Gatling.Utilities.available_port
 
     mix_deps_get(build_path)
     mix_compile(build_path)
@@ -105,13 +105,6 @@ defmodule Mix.Tasks.Gatling.Deploy do
     |> File.read!()
     |> String.split(~r/,?\s/, trim: true)
     |> Enum.join(" ")
-  end
-
-  def available_port do
-    {:ok, port} = :gen_tcp.listen(0, [])
-    {:ok, port_number} = :inet.port(port)
-    Port.close port
-    port_number
   end
 
   EEx.function_from_file( :def,
