@@ -12,7 +12,7 @@ to deploy Phoenix apps.
 Install the app on your server
 
 ```
-mix archive.install https://github.com/hashrocket/gatling/raw/master/releases/gatling-0.0.1.ez
+mix archive.install https://github.com/hashrocket/gatling/raw/master/gatling.ez
 ```
 
 ### Deploying your app
