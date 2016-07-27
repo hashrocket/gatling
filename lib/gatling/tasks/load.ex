@@ -27,6 +27,8 @@ defmodule Mix.Tasks.Gatling.Load do
   def post_receive_hook(path) do
     script = """
     #!/bin/sh
+
+    unset GIT_DIR
     exec mix gatling.receive #{path}
     """
     script_path = [path, ".git", "hooks", "post-update"] |> Path.join()

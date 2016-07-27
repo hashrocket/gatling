@@ -2,15 +2,18 @@ defmodule Mix.Tasks.Gatling.Deploy do
   use Mix.Task
   require EEx
 
-  import Gatling.Bash, only: [bash: 3, bash: 2]
+  import Gatling.Bash, only: [bash: 3, bash: 2, log: 1]
 
-  @module """
+  @moduledoc """
   - Create a release of git HEAD using Exrm
   - Create a init script for the app so it will reboot on a server reboot
   - Configure Nginx go serve it
   - Start the app
   """
 
+  @shortdoc """
+    Create an exrm release of the given project and deploy it
+  """
   def run([]) do
     build_path = Mix.Shell.IO.prompt("Please enter the path to your project:")
                   |> String.trim()
@@ -44,20 +47,16 @@ defmodule Mix.Tasks.Gatling.Deploy do
   end
 
   def mix_compile(build_path) do
-    bash("mix", ["local.rebar", "--force"], cd: build_path)
-    bash("mix", ["compile", "--force"], cd: build_path)
+    bash("mix", ["local.rebar", "--force"], cd: build_path, message: "Installing rebar")
+    bash("mix", ["local.hex", "--force"], cd: build_path, message: "Installing hex")
+    bash("mix", ["compile", "--force"], cd: build_path, message: "Compiling")
     bash("mix", ["phoenix.digest"], cd: build_path)
   end
 
   def mix_release(build_path) do
-    release_message = bash("mix", ["release", "--no-confirm-missing"], cd: build_path)
+    release_message = bash("mix", ["release", "--no-confirm-missing"], cd: build_path, message: "Creating release")
     Regex.named_captures(~r/(?<version>\d+\.\d+\.\d\S+)\s+is\s+ready/, release_message)
     |> Map.fetch!("version")
-  end
-
-  def git_sha(build_path) do
-    System.cmd("git", ["rev-parse", "--short", "HEAD"], cd: build_path)
-    |> elem(0) |> String.trim()
   end
 
   def make_deploy_dir(deploy_path) do
@@ -68,13 +67,15 @@ defmodule Mix.Tasks.Gatling.Deploy do
     project     = Path.basename(build_path)
     deploy_path = Path.join(deploy_path, "#{project}.tar.gz")
 
-    [build_path, "rel", project, "releases", version, "#{project}.tar.gz"]
+    release_from = [build_path, "rel", project, "releases", version, "#{project}.tar.gz"]
+    release_from
     |> Path.join()
     |> File.cp(deploy_path)
+    log("Copied #{release_from} -> #{deploy_path}")
   end
 
   def expand_release(project, deploy_path) do
-    bash("tar", ["-xf", "#{project}.tar.gz"], cd: deploy_path)
+    bash("tar", ["-xf", "#{project}.tar.gz"], cd: deploy_path, message: "Extracting #{project}")
   end
 
   def install_init_script(project_name, port) do
@@ -83,10 +84,12 @@ defmodule Mix.Tasks.Gatling.Deploy do
     File.write(init_path, file)
     File.chmod(init_path, 0100)
     bash("update-rc.d", [project_name, "defaults"])
+    log("Added service #{project_name} in /etc/init.d")
   end
 
   def start_service(project, port) do
     bash("sudo", ["service", project, "start"], env: [{"PORT", to_string(port)}])
+    log("Started service #{project}")
   end
 
   def install_nginx_site(build_path, port) do
@@ -96,7 +99,7 @@ defmodule Mix.Tasks.Gatling.Deploy do
     enabled      = "/etc/nginx/sites-enabled/#{project_name}"
     File.write(available, file)
     File.ln_s(available, enabled)
-    bash("nginx", ["-s", "reload"])
+    bash("nginx", ["-s", "reload"], message: "Configuring nginx")
   end
 
   def domains(build_path) do
