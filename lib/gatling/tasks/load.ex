@@ -37,7 +37,7 @@ defmodule Mix.Tasks.Gatling.Load do
     #!/bin/sh
 
     unset GIT_DIR
-    exec mix gatling.receive #{path}
+    exec sudo mix gatling.receive #{path}
     """
     script_path = [path, ".git", "hooks", "post-update"] |> Path.join()
     File.write(script_path, script)
