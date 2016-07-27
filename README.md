@@ -20,8 +20,7 @@ mix archive.install https://github.com/hashrocket/gatling/raw/master/releases/ga
 For a brand new project:
 
 - SSH into your server
-- `$mix gatling.load {mix project name}
-
+- `$mix gatling.load {mix project name}`
 - Ensure your elixir project can build a release with Exrm
 - Add a file to the root of your project named `domains` and
 add a list of all the domains you want this point to your project.

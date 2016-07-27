@@ -13,6 +13,9 @@ defmodule Gatling.Mixfile do
       package: package,
       description: description,
       deps: deps,
+      docs: [
+        extras: [ "README.md" ]
+      ],
     ]
   end
 
