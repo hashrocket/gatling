@@ -2,6 +2,7 @@ defmodule Mix.Tasks.Gatling.Upgrade do
   use Mix.Task
 
   alias Mix.Tasks.Gatling.Deploy
+  import Gatling.Bash, only: [bash: 2, log: 1]
 
   def run([]) do
     build_path = Mix.Shell.IO.prompt("Please enter the path to your project:")
@@ -29,7 +30,7 @@ defmodule Mix.Tasks.Gatling.Upgrade do
   end
 
   def upgrade_service(project, version) do
-    System.cmd("sudo", ["service", project, "upgrade", version])
+    bash("sudo", ["service", project, "upgrade", version])
   end
 
 end
