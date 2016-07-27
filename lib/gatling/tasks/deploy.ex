@@ -64,12 +64,12 @@ defmodule Mix.Tasks.Gatling.Deploy do
   end
 
   def copy_release_to_deploy(build_path, deploy_path, version) do
-    project     = Path.basename(build_path)
-    deploy_path = Path.join(deploy_path, "#{project}.tar.gz")
-
+    project      = Path.basename(build_path)
+    deploy_path  = Path.join(deploy_path, "#{project}.tar.gz")
     release_from = [build_path, "rel", project, "releases", version, "#{project}.tar.gz"]
+                 |> Path.join()
+
     release_from
-    |> Path.join()
     |> File.cp(deploy_path)
     log("Copied #{release_from} -> #{deploy_path}")
   end
