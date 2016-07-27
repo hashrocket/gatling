@@ -20,19 +20,19 @@ defmodule Mix.Tasks.Gatling.Load do
     load(project_name)
   end
 
-  def load(project_name) do
-    dir = dir(project_name)
-    if File.exists?(dir) do
-      log(~s(-> #{dir} already exists))
+  defp load(project_name) do
+    build_path =  Gatling.Utilities.build_path(project_name)
+    if File.exists?(build_path) do
+      log(~s(#{build_path} already exists))
     else
-      File.mkdir_p!(dir)
-      bash("git", ["init", dir])
-      bash("git", ["config", "receive.denyCurrentBranch", "updateInstead"], cd: dir)
-      post_receive_hook(dir)
+      File.mkdir_p!(build_path)
+      bash("git", ["init", build_path])
+      bash("git", ["config", "receive.denyCurrentBranch", "updateInstead"], cd: build_path)
+      post_receive_hook(build_path)
     end
   end
 
-  def post_receive_hook(path) do
+  defp post_receive_hook(path) do
     script = """
     #!/bin/sh
 
@@ -42,11 +42,6 @@ defmodule Mix.Tasks.Gatling.Load do
     script_path = [path, ".git", "hooks", "post-update"] |> Path.join()
     File.write(script_path, script)
     File.chmod(script_path, 00101)
-  end
-
-  defp dir(project_name) do
-    project = String.strip(project_name)
-    System.user_home |> Path.join(project)
   end
 
 end

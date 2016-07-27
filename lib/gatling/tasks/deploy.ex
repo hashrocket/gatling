@@ -26,7 +26,7 @@ defmodule Mix.Tasks.Gatling.Deploy do
 
   def deploy(build_path) do
     project      = Path.basename(build_path)
-    deploy_path  = Gatling.Utilities.deploy_path(project)
+    deploy_path  = Gatling.Utilities.deploy_dir(project)
     port         = Gatling.Utilities.available_port
 
     mix_deps_get(build_path)
