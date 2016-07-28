@@ -68,3 +68,12 @@ Once your app is running do the following:
 - `git push path.to.remote:project`
 
 And that's it! You'll see the new version being deployed.
+Thats it!!! You are live.
+
+### Development
+
+```
+$ git clone https://github.com/hashrocket/gatling
+$ cd gatling
+$ mix deps.get
+```
