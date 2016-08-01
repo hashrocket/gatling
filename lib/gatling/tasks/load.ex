@@ -18,7 +18,7 @@ defmodule Mix.Tasks.Gatling.Load do
     load(project_name)
   end
 
-  defp load(project_name) do
+  def load(project_name) do
     build_path =  Gatling.Utilities.build_path(project_name)
     if File.exists?(build_path) do
       log(~s(#{build_path} already exists))
@@ -30,16 +30,19 @@ defmodule Mix.Tasks.Gatling.Load do
     end
   end
 
-  defp post_receive_hook(path) do
-    script = """
+  def post_receive_hook(path) do
+    script_path = [path, ".git", "hooks", "post-update"] |> Path.join()
+    File.write(script_path, git_hook_template(path))
+    File.chmod(script_path, 775)
+  end
+
+  def git_hook_template(path) do
+    """
     #!/bin/sh
 
     unset GIT_DIR
     exec sudo mix gatling.receive #{path}
     """
-    script_path = [path, ".git", "hooks", "post-update"] |> Path.join()
-    File.write(script_path, script)
-    File.chmod(script_path, 00101)
   end
 
 end
