@@ -1,10 +1,11 @@
 defmodule Gatling.Mixfile do
   use Mix.Project
 
+  def version, do: "0.0.2"
   def project do
     [
       app: :gatling,
-      version: "0.0.1",
+      version: version,
       elixir: "~> 1.2",
       build_embedded: Mix.env == :prod,
       start_permanent: Mix.env == :prod,
@@ -12,7 +13,7 @@ defmodule Gatling.Mixfile do
       source_url: "https://github.com/hashrocket/gatling",
       package: package,
       description: description,
-      aliases: aliases(Mix.env),
+      aliases: aliases,
       deps: deps,
       docs: [
         extras: [ "README.md" ]
@@ -21,9 +22,7 @@ defmodule Gatling.Mixfile do
   end
 
   defp description do
-    """
-    Enjoy heroku like deployments with Exrm and your own server.
-    """
+    "Enjoy heroku like deployments with Exrm and your own server"
   end
 
   defp package do
@@ -47,15 +46,9 @@ defmodule Gatling.Mixfile do
     ]
   end
 
-  defp aliases(:prod) do
-    [ build: ["compile", "archive.build", &release/1] ]
-  end
-  defp aliases(_), do: []
-
-  defp release(_) do
-    filename = "#{project[:app]}-#{project[:version]}.ez"
-    File.cp(filename, "releases/#{filename}")
-    File.rename(filename, "gatling.ez")
+  defp aliases do
+    filename = "gatling-#{version}.ez"
+    [ build: ["compile", "archive.build -o ./releases/#{filename}"]]
   end
 
 end
