@@ -14,7 +14,7 @@ defmodule Mix.Tasks.Gatling.Deploy do
   @shortdoc "Create an exrm release of the given project and deploy it"
 
   def run([]) do
-    build_path = Mix.Shell.IO.prompt("Please enter the path to your project:")
+    build_path = Mix.Shell.IO.prompt("Please enter your project name:")
                   |> String.trim()
     deploy(build_path)
   end
@@ -23,9 +23,9 @@ defmodule Mix.Tasks.Gatling.Deploy do
     deploy(build_path)
   end
 
-  def deploy(build_path) do
-    project      = Path.basename(build_path)
+  def deploy(project) do
     deploy_path  = Gatling.Utilities.deploy_dir(project)
+    build_path   = Gatling.Utilities.build_path(project)
     port         = Gatling.Utilities.available_port
 
     mix_deps_get(build_path)
@@ -46,13 +46,13 @@ defmodule Mix.Tasks.Gatling.Deploy do
   end
 
   def mix_compile(build_path) do
-    bash("mix", ["compile", "--force"], cd: build_path, message: "Compiling")
-    bash("mix", ["phoenix.digest", "-o", "public/static"], cd: build_path)
+    bash("mix", ~w[compile --force], cd: build_path, message: "Compiling")
+    bash("mix", ~w[phoenix.digest -o public/static], cd: build_path)
   end
 
   def mix_release(build_path) do
-    release_message = bash("mix", ["release", "--no-confirm-missing"], cd: build_path, message: "Creating release")
-    Regex.named_captures(~r/(?<version>\d+\.\d+\.\d\S+)\s+is\s+ready/, release_message)
+    release_message = bash("mix", ~w[release --no-confirm-missing], cd: build_path, message: "Creating release")
+    Regex.named_captures(~r/(?<version>\d+\.\d+\.\d\S*)\s+is\s+ready/, release_message)
     |> Map.fetch!("version")
   end
 
@@ -77,26 +77,26 @@ defmodule Mix.Tasks.Gatling.Deploy do
 
   def install_init_script(project_name, port) do
     file      = script_template(project_name: project_name, port: port)
-    init_path = "/etc/init.d/#{project_name}"
+    init_path = Path.join([Gatling.Utilities.etc_path, project_name])
     File.write(init_path, file)
     File.chmod(init_path, 0100)
-    bash("update-rc.d", [project_name, "defaults"])
-    log("Added service #{project_name} in /etc/init.d")
+    bash("update-rc.d", ~w[#{ project_name } defaults])
+    log("Added service #{project_name} in #{Gatling.Utilities.etc_path}")
   end
 
   def start_service(project, port) do
-    bash("sudo", ["service", project, "start"], env: [{"PORT", to_string(port)}])
+    bash("service", ~w[#{project} start], env: [{"PORT", to_string(port)}])
     log("Started service #{project}")
   end
 
   def install_nginx_site(build_path, port) do
     project_name = build_path |> Path.basename()
     file         = nginx_template( domains: domains(build_path), port: port,)
-    available    = "/etc/nginx/sites-available/#{project_name}"
-    enabled      = "/etc/nginx/sites-enabled/#{project_name}"
+    available    = Path.join([Gatling.Utilities.nginx_path, "sites-available", project_name])
+    enabled      = Path.join([Gatling.Utilities.nginx_path, "sites-enabled", project_name])
     File.write(available, file)
     File.ln_s(available, enabled)
-    bash("nginx", ["-s", "reload"], message: "Configuring nginx")
+    bash("nginx", ~w[-s reload], message: "Configuring nginx")
   end
 
   def domains(build_path) do

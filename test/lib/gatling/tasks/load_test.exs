@@ -1,6 +1,11 @@
 defmodule Gatling.Tasks.LoadTest do
   use ExUnit.Case, async: true
 
+  def setup do
+    File.rm_rf("test/root")
+    :ok
+  end
+
   test ".run" do
     Mix.Tasks.Gatling.Load.run(["test_project"])
     expected_path = "test/root/home/ubuntu/test_project"

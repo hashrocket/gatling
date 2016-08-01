@@ -1,4 +1,5 @@
 defmodule Gatling.Bash do
+  require Logger
 
   def log({message, _}) do
     message = String.trim(message)
@@ -17,7 +18,11 @@ defmodule Gatling.Bash do
     options         = Keyword.merge(default_options, opts)
 
     if message, do: log(message)
-    System.cmd(command, args, options) |> log()
+    try do
+      System.cmd(command, args, options) |> log()
+    rescue
+      _ -> Logger.warn ~s[Command "#{command}" not found]
+    end
   end
 
 end
