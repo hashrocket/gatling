@@ -12,17 +12,20 @@ defmodule Gatling.Bash do
     message
   end
 
-  def bash(command, args, opts\\[]) do
+  if Mix.env == :test do
+    #ignore commands in test
+    def bash("nginx", _, _), do: Mix.Shell.IO.info "Nginx command"
+    def bash("service", _, _), do: Mix.Shell.IO.info "Service command"
+    def bash("update-rc.d", _, _), do: Mix.Shell.IO.info "Update-rc.d command"
+  end
+
+  def bash(command, args, opts) do
     default_options = [stderr_to_stdout: true]
     {message, opts} = Keyword.pop(opts, :message)
     options         = Keyword.merge(default_options, opts)
 
     if message, do: log(message)
-    try do
-      System.cmd(command, args, options) |> log()
-    rescue
-      _ -> Logger.warn ~s[Command "#{command}" not found]
-    end
+    System.cmd(command, args, options) |> log()
   end
 
 end

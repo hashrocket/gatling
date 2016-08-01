@@ -2,7 +2,7 @@ defmodule Mix.Tasks.Gatling.Deploy do
   use Mix.Task
   require EEx
 
-  import Gatling.Bash, only: [bash: 3, bash: 2, log: 1]
+  import Gatling.Bash, only: [bash: 3, log: 1]
 
   @moduledoc """
   - Create a release of git HEAD using Exrm
@@ -23,7 +23,7 @@ defmodule Mix.Tasks.Gatling.Deploy do
     deploy(build_path)
   end
 
-  def deploy(project) do
+  defp deploy(project) do
     deploy_path  = Gatling.Utilities.deploy_dir(project)
     build_path   = Gatling.Utilities.build_path(project)
     port         = Gatling.Utilities.available_port
@@ -80,7 +80,7 @@ defmodule Mix.Tasks.Gatling.Deploy do
     init_path = Path.join([Gatling.Utilities.etc_path, project_name])
     File.write(init_path, file)
     File.chmod(init_path, 0100)
-    bash("update-rc.d", ~w[#{ project_name } defaults])
+    bash("update-rc.d", ~w[#{ project_name } defaults], [])
     log("Added service #{project_name} in #{Gatling.Utilities.etc_path}")
   end
 
