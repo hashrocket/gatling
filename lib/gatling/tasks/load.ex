@@ -7,9 +7,7 @@ defmodule Mix.Tasks.Gatling.Load do
     Create a git repository for your mix project. The name of the project must match `:app` in your mix.exs
   """
 
-  @shortdoc """
-    Create a git repository or your mix project
-  """
+  @shortdoc "Create a git repository or your mix project"
 
   def run([]) do
     project_name = Mix.Shell.IO.prompt("Please enter a project name:")

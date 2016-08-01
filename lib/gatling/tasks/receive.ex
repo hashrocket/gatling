@@ -5,9 +5,7 @@ defmodule Mix.Tasks.Gatling.Receive do
     Run by git's post-update hook. Determe whether to deploy the app, or update an existing one. 
   """
 
-  @shortdoc """
-    Run by git's post-update hook. Deploy the app, or update the existing one. 
-  """
+  @shortdoc "Run by git's post-update hook. Deploy the app, or update the existing one"
 
   def run([path]) do
     project = Path.basename(path)

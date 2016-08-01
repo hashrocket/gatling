@@ -11,9 +11,8 @@ defmodule Mix.Tasks.Gatling.Deploy do
   - Start the app
   """
 
-  @shortdoc """
-    Create an exrm release of the given project and deploy it
-  """
+  @shortdoc "Create an exrm release of the given project and deploy it"
+
   def run([]) do
     build_path = Mix.Shell.IO.prompt("Please enter the path to your project:")
                   |> String.trim()
