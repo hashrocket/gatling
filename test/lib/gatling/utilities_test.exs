@@ -39,4 +39,8 @@ defmodule Gatling.UtilitiesTest do
     assert Regex.match?(regex, path)
   end
 
+  test ".version" do
+    assert Utilities.version("test/sample_project") == "0.0.0"
+  end
+
 end

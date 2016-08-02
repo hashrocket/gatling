@@ -35,6 +35,12 @@ defmodule Gatling.Utilities do
     port_number
   end
 
+  def version(build_path) do
+    path = Path.join([build_path, "mix.exs"])
+    [{mix_project, _}] = Code.load_file(path)
+    mix_project.project[:version]
+  end
+
   # def nginx_template(domains: domains, port: port)
   EEx.function_from_file(:def, :nginx_template,
     "lib/gatling/sites_available_template.conf.eex",
