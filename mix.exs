@@ -48,7 +48,11 @@ defmodule Gatling.Mixfile do
 
   defp aliases do
     filename = "gatling-#{version}.ez"
-    [ build: ["compile", "archive.build -o ./releases/#{filename}"]]
+    [ build: [
+        "compile",
+        "archive.build -o ./releases/#{filename}"
+      ]
+    ]
   end
 
 end

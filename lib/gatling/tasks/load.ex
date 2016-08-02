@@ -1,5 +1,6 @@
 defmodule Mix.Tasks.Gatling.Load do
   use Mix.Task
+  require EEx
 
   import Gatling.Bash, only: [bash: 3, log: 1]
 
@@ -25,24 +26,23 @@ defmodule Mix.Tasks.Gatling.Load do
     else
       File.mkdir_p!(build_path)
       bash("git", ["init", build_path], [])
-      bash("git", ["config", "receive.denyCurrentBranch", "updateInstead"], cd: build_path)
-      post_receive_hook(build_path)
+      bash("git", ~w[config receive.denyCurrentBranch updateInstead], cd: build_path)
+      install_post_receive_hook(build_path, project_name)
     end
   end
 
-  def post_receive_hook(path) do
+  def install_post_receive_hook(path, project_name) do
+    file        = git_hook_template(project_name: project_name)
     script_path = [path, ".git", "hooks", "post-update"] |> Path.join()
-    File.write(script_path, git_hook_template(path))
+
+    File.write(script_path, file)
     File.chmod(script_path, 775)
   end
 
-  def git_hook_template(path) do
-    """
-    #!/bin/sh
-
-    unset GIT_DIR
-    exec sudo mix gatling.receive #{path}
-    """
-  end
+  EEx.function_from_file( :def,
+    :git_hook_template,
+    __DIR__ |> Path.dirname |> Path.join("git_hook_template.sh.eex"),
+    [:assigns]
+  )
 
 end
