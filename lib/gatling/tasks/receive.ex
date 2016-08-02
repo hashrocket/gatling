@@ -5,16 +5,11 @@ defmodule Mix.Tasks.Gatling.Receive do
   Run by git's post-update hook. Determe whether to deploy the app, or update an existing one.
   """
 
-  @shortdoc "Deploy project or update the existing one"
+  @shortdoc "Do a hot upgrade on currently deploye project"
 
   def run([project]) do
-    deploy_dir = Gatling.Utilities.deploy_dir(project)
-
-    if File.exists?(deploy_dir) do
+    if File.exists? Gatling.Utilities.deploy_dir(project) do
       Mix.Tasks.Gatling.Upgrade.upgrade(project)
-    else
-      Mix.Tasks.Gatling.Deploy.deploy(project)
     end
-
   end
 end
