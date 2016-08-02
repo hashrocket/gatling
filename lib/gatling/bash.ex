@@ -20,12 +20,12 @@ defmodule Gatling.Bash do
   end
 
   def bash(command, args, opts) do
-    default_options = [stderr_to_stdout: true]
+    default_options = [stderr_to_stdout: true, into: IO.stream(:stdio, :line)]
     {message, opts} = Keyword.pop(opts, :message)
     options         = Keyword.merge(default_options, opts)
 
     if message, do: log(message)
-    System.cmd(command, args, options) |> log()
+    System.cmd(command, args, options) |> elem(0)
   end
 
 end

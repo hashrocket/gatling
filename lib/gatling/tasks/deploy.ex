@@ -50,7 +50,7 @@ defmodule Mix.Tasks.Gatling.Deploy do
   end
 
   def mix_release(build_path) do
-    release_message = bash("mix", ~w[release --no-confirm-missing], cd: build_path, message: "Creating release")
+    release_message = bash("mix", ~w[release --no-confirm-missing], cd: build_path, message: "Creating release", into: "")
     Regex.named_captures(~r/(?<version>\d+\.\d+\.\d\S*)\s+is\s+ready/, release_message)
     |> Map.fetch!("version")
   end
