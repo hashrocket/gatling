@@ -3,7 +3,7 @@ defmodule SampleProject.Mixfile do
 
   def project do
     [app: :sample_project,
-     version: "0.1.0",
+     version: "0.0.0",
      aliases: aliases,
    ]
   end

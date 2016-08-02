@@ -5,21 +5,23 @@ defmodule Mix.Tasks.Gatling.Upgrade do
   import Gatling.Bash, only: [bash: 3]
 
   def run([]) do
-    build_path = Mix.Shell.IO.prompt("Please enter the path to your project:")
+    project= Mix.Shell.IO.prompt("Please enter project_name")
                   |> String.trim()
-    upgrade(build_path)
+    upgrade(project)
   end
 
-  def run([build_path]) do
-    upgrade(build_path)
+  def run([project]) do
+    upgrade(project)
   end
 
-  def upgrade(build_path) do
+  def upgrade(project) do
+
+    deploy_path  = Gatling.Utilities.deploy_dir(project)
+    build_path   = Gatling.Utilities.build_path(project)
 
     Deploy.mix_deps_get(build_path)
     Deploy.mix_compile(build_path)
 
-    project     = Path.basename(build_path)
     version     = Deploy.mix_release(build_path)
     upgrade_dir = Gatling.Utilities.upgrade_dir(project, version)
 
@@ -30,7 +32,7 @@ defmodule Mix.Tasks.Gatling.Upgrade do
   end
 
   def upgrade_service(project, version) do
-    bash("sudo", ["service", project, "upgrade", version], [])
+    bash("service", ~w[#{project} upgrade #{version}], [])
   end
 
 end

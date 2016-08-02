@@ -14,13 +14,13 @@ defmodule Mix.Tasks.Gatling.Deploy do
   @shortdoc "Create an exrm release of the given project and deploy it"
 
   def run([]) do
-    build_path = Mix.Shell.IO.prompt("Please enter your project name:")
+    project_name = Mix.Shell.IO.prompt("Please enter your project name:")
                   |> String.trim()
-    deploy(build_path)
+    deploy(project_name)
   end
 
-  def run([build_path]) do
-    deploy(build_path)
+  def run([project_name]) do
+    deploy(project_name)
   end
 
   defp deploy(project) do

@@ -1,20 +1,18 @@
-defmodule Gatling.Tasks.DeployTest do
+defmodule Gatling.Tasks.DeployUpgradeTest do
   use ExUnit.Case
 
   setup do
     cleanup
-
     build_path = Gatling.Utilities.build_path("sample_project")
     File.mkdir_p(build_path)
     File.cp_r("test/sample_project", build_path)
     File.mkdir_p(Gatling.Utilities.nginx_path <> "/sites-available")
     File.mkdir_p(Gatling.Utilities.nginx_path <> "/sites-enabled")
     File.mkdir_p(Gatling.Utilities.etc_path)
-
     :ok
   end
 
-  test ".run" do
+  test "Deploy, then upgrade" do
     Mix.Tasks.Gatling.Deploy.run(["sample_project"])
 
     assert File.exists?(Path.join(
@@ -33,7 +31,15 @@ defmodule Gatling.Tasks.DeployTest do
       [Gatling.Utilities.etc_path , "sample_project"]
     ))
 
+    Mix.Tasks.Gatling.Upgrade.run(["sample_project"])
+
+    #test/sample_project/mix.exs
+    assert File.exists?(Path.join(
+      [Gatling.Utilities.deploy_dir("sample_project"), "releases", "0.0.0", "sample_project.tar.gz"]
+    ))
+
     cleanup
+
   end
 
   def cleanup do
