@@ -1,4 +1,5 @@
 defmodule Gatling.Utilities do
+  require EEx
 
   def nginx_path, do: Application.get_env(:gatling, :nginx_path)
   def etc_path,   do: Application.get_env(:gatling, :etc_path)
@@ -30,5 +31,24 @@ defmodule Gatling.Utilities do
     Port.close port
     port_number
   end
+
+  # def nginx_template(domains: domains, port: port)
+  EEx.function_from_file(:def, :nginx_template,
+    "lib/gatling/sites_available_template.conf.eex",
+    [:assigns]
+  )
+
+  # def script_template(project_name: project_name, port: port)
+  EEx.function_from_file(:def, :script_template,
+   "lib/gatling/init_script_template.sh.eex",
+    [:assigns]
+  )
+
+  # def git_hookt_template(project_name: project_name)
+  EEx.function_from_file( :def,
+    :git_hook_template,
+    "lib/gatling/git_hook_template.sh.eex",
+    [:assigns]
+  )
 
 end

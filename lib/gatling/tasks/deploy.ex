@@ -1,6 +1,5 @@
 defmodule Mix.Tasks.Gatling.Deploy do
   use Mix.Task
-  require EEx
 
   import Gatling.Bash, only: [bash: 3, log: 1]
 
@@ -76,7 +75,7 @@ defmodule Mix.Tasks.Gatling.Deploy do
   end
 
   def install_init_script(project_name, port) do
-    file      = script_template(project_name: project_name, port: port)
+    file      = Gatling.Utilities.script_template(project_name: project_name, port: port)
     init_path = Path.join([Gatling.Utilities.etc_path, project_name])
     File.write(init_path, file)
     File.chmod(init_path, 0100)
@@ -91,7 +90,7 @@ defmodule Mix.Tasks.Gatling.Deploy do
 
   def install_nginx_site(build_path, port) do
     project_name = build_path |> Path.basename()
-    file         = nginx_template( domains: domains(build_path), port: port,)
+    file         = Gatling.Utilities.nginx_template( domains: domains(build_path), port: port,)
     available    = Path.join([Gatling.Utilities.nginx_path, "sites-available", project_name])
     enabled      = Path.join([Gatling.Utilities.nginx_path, "sites-enabled", project_name])
     File.write(available, file)
@@ -105,17 +104,5 @@ defmodule Mix.Tasks.Gatling.Deploy do
     |> String.split(~r/,?\s/, trim: true)
     |> Enum.join(" ")
   end
-
-  EEx.function_from_file( :def,
-    :script_template,
-    __DIR__ |> Path.dirname |> Path.join("init_script_template.sh.eex"),
-    [:assigns]
-  )
-
-  EEx.function_from_file( :def,
-    :nginx_template,
-    __DIR__ |> Path.dirname |> Path.join("sites_available_template.conf.eex"),
-    [:assigns]
-  )
 
 end
