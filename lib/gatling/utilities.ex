@@ -1,20 +1,23 @@
 defmodule Gatling.Utilities do
   require EEx
 
-  def nginx_path, do: Application.get_env(:gatling, :nginx_path)
-  def etc_path,   do: Application.get_env(:gatling, :etc_path)
+  def nginx_path do
+    Application.get_env(:gatling, :nginx_path) || "/etc/nginx"
+  end
+
+  def etc_path do
+    Application.get_env(:gatling, :etc_path) || "/etc/init.d"
+  end
 
   def build_path(project_name) do
     project   = String.strip(project_name)
-    build_dir = Application.get_env(:gatling, :build_path).()
-    Path.join(build_dir, project)
+    build_dir = Application.get_env(:gatling, :build_path) || fn -> System.user_home end
+    Path.join(build_dir.(), project)
   end
 
   def deploy_dir(project) do
-    Path.join([
-      Application.get_env(:gatling, :deploy_path).(),
-      project,
-    ])
+    deploy_path = Application.get_env(:gatling, :deploy_path) || fn -> Path.join([System.user_home, "deployments"]) end
+    Path.join([deploy_path.(), project])
   end
 
   def upgrade_dir(project, version) do
