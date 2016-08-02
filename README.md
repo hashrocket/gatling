@@ -63,8 +63,8 @@ Now for the initial deploy. Run `$ mix gatling.deploy {project_name}` and Gatlin
 
 Once your app is running do the following:
 
-- Increase the version number of your application. See [here](/mix.example.exs) for an example to automatically increase the version number along with your commit.
+- Increase the version number of your application. See [here](https://github.com/hashrocket/gatling/blob/master/mix.example.exs) for an example to automatically increase the version number along with your commit.
 - Commit your new changes
-- `git push path.to:remote/server/project`
+- `git push path.to.remote:project`
 
 And that's it! You'll see the new version being deployed.
