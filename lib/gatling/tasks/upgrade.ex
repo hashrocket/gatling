@@ -4,18 +4,11 @@ defmodule Mix.Tasks.Gatling.Upgrade do
   alias Mix.Tasks.Gatling.Deploy
   import Gatling.Bash, only: [bash: 3]
 
-  def run([]) do
-    project= Mix.Shell.IO.prompt("Please enter project_name")
-                  |> String.trim()
-    upgrade(project)
-  end
-
   def run([project]) do
     upgrade(project)
   end
 
   def upgrade(project) do
-
     deploy_path  = Gatling.Utilities.deploy_dir(project)
     build_path   = Gatling.Utilities.build_path(project)
 
