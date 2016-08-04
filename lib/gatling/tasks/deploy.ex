@@ -16,7 +16,7 @@ defmodule Mix.Tasks.Gatling.Deploy do
     deploy(project_name)
   end
 
-  defp deploy(project) do
+  def deploy(project) do
     deploy_path  = Gatling.Utilities.deploy_path(project)
     build_dir    = Gatling.Utilities.build_dir(project)
     port         = Gatling.Utilities.available_port
@@ -62,7 +62,7 @@ defmodule Mix.Tasks.Gatling.Deploy do
     file      = Gatling.Utilities.script_template(project_name: project_name, port: port)
     init_path = Gatling.Utilities.etc_path(project_name)
     File.write(init_path, file)
-    File.chmod(init_path, 0100)
+    File.chmod(init_path, 777)
     bash("update-rc.d", ~w[#{ project_name } defaults])
   end
 

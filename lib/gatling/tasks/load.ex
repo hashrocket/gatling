@@ -35,7 +35,7 @@ defmodule Mix.Tasks.Gatling.Load do
     path = Gatling.Utilities.git_hook_path(project)
 
     File.write(path, file)
-    File.chmod(path, 775)
+    File.chmod(path, 777)
   end
 
 end
