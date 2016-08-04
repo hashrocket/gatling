@@ -12,8 +12,8 @@ defmodule Mix.Tasks.Gatling.Deploy do
 
   @shortdoc "Create an exrm release of the given project and deploy it"
 
-  def run([project_name]) do
-    deploy(project_name)
+  def run([project]) do
+    deploy(project)
   end
 
   def deploy(project) do
@@ -58,12 +58,12 @@ defmodule Mix.Tasks.Gatling.Deploy do
     bash("tar", ~w[-xf #{deploy_path}])
   end
 
-  def install_init_script(project_name, port) do
-    file      = Gatling.Utilities.script_template(project_name: project_name, port: port)
-    init_path = Gatling.Utilities.etc_path(project_name)
+  def install_init_script(project, port) do
+    file      = Gatling.Utilities.script_template(project_name: project, port: port)
+    init_path = Gatling.Utilities.etc_path(project)
     File.write(init_path, file)
     File.chmod(init_path, 777)
-    bash("update-rc.d", ~w[#{ project_name } defaults])
+    bash("update-rc.d", ~w[#{project} defaults])
   end
 
   def start_service(project, port) do

@@ -21,8 +21,8 @@ defmodule Gatling.Utilities do
     Path.join(etc_dir, project)
   end
 
-  def build_dir(project_name) do
-    project   = String.strip(project_name)
+  def build_dir(project) do
+    project   = String.strip(project)
     build_dir = Application.get_env(:gatling, :build_dir) || fn -> System.user_home end
     Path.join(build_dir.(), project)
   end

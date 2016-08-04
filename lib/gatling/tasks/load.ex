@@ -10,23 +10,23 @@ defmodule Mix.Tasks.Gatling.Load do
   @shortdoc "Create a git repository or your mix project"
 
   def run([]) do
-    project_name = Mix.Shell.IO.prompt("Please enter a project name:")
-    load(project_name)
+    project = Mix.Shell.IO.prompt("Please enter a project name:")
+    load(project)
   end
 
-  def run([project_name]) do
-    load(project_name)
+  def run([project]) do
+    load(project)
   end
 
-  def load(project_name) do
-    build_dir =  Gatling.Utilities.build_dir(project_name)
+  def load(project) do
+    build_dir =  Gatling.Utilities.build_dir(project)
     if File.exists?(build_dir) do
       log(~s(#{build_dir} already exists))
     else
       File.mkdir_p!(build_dir)
       bash("git", ["init", build_dir], [])
       bash("git", ~w[config receive.denyCurrentBranch updateInstead], cd: build_dir)
-      install_post_receive_hook(project_name)
+      install_post_receive_hook(project)
     end
   end
 
