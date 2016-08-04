@@ -1,6 +1,6 @@
 # Gatling
 
-Conveniently deploy a bunch of elixir phoenix apps
+Conveniently deploy a bunch of Phoenix apps
 
 The main goal of Gatling is to make it very easy, cheap, and convenient to deploy Phoenix apps.
 
@@ -12,7 +12,7 @@ This has been tested on an Ubuntu 16.04 x64 server on Ec2 and Digital Ocean.
 Install elixir, nginx, and the Gatling archive on your server
 
 ```bash
-$ ssh server.adderss
+$ ssh server.address
 ```
 Follow instructions [here](http://elixir-lang.org/install.html#unix-and-unix-like) to install elixir
 ```bash
@@ -31,7 +31,7 @@ $ mix gatling.load {mix project name}
 ```
 Ensure your elixir project can build a release with [Exrm](https://github.com/bitwalker/exrm)
 
-Add a file to the root of your project named `domains` and  list  all  domains that will point to this project
+Add a file to the root of your project named `domains` and  list  all  domains that will point to this project. See an example [here](https://github.com/hashrocket/gatling/tree/master/test/sample_project)
 
 In your `config/prod.exs` change `cache_static_manifest` to and make sure your `port` configuration uses an environment variable called `PORT`(Gatling will set this for you automatically):
 
@@ -67,8 +67,8 @@ Once your app is running do the following:
 - Commit your new changes
 - `git push path.to.remote:project`
 
-And that's it! You'll see the new version being deployed.
-Thats it!!! You are live.
+And that's it! You'll see the new version being deployed with no downtime!.
+Thats it!!! You are golden.
 
 ### Development
 
