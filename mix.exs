@@ -41,9 +41,7 @@ defmodule Gatling.Mixfile do
   end
 
   defp deps do
-    [
-      {:ex_doc, ">= 0.0.0"},
-    ]
+    [ {:ex_doc, ">= 0.0.0"} ]
   end
 
   defp aliases do

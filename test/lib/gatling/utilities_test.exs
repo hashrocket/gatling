@@ -4,7 +4,7 @@ defmodule Gatling.UtilitiesTest do
   alias Gatling.Utilities
 
   setup do
-    build_dir = Gatling.Utilities.build_dir("sample_project")
+    build_dir = Utilities.build_dir("sample_project")
     File.mkdir_p(build_dir)
     File.cp_r("test/sample_project", build_dir)
 
@@ -15,7 +15,6 @@ defmodule Gatling.UtilitiesTest do
 
     :ok
   end
-
 
   # configured in config/test.exs
   test ".build_dir" do

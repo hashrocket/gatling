@@ -17,11 +17,9 @@ defmodule Mix.Tasks.Gatling.Deploy do
   end
 
   defp deploy(project) do
-    deploy_dir   = Gatling.Utilities.deploy_dir(project)
     deploy_path  = Gatling.Utilities.deploy_path(project)
-    build_dir   = Gatling.Utilities.build_dir(project)
+    build_dir    = Gatling.Utilities.build_dir(project)
     port         = Gatling.Utilities.available_port
-    version      = Gatling.Utilities.version(project)
     release_path = Gatling.Utilities.built_release_path(project)
 
     mix_deps_get(build_dir)
