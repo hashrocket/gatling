@@ -39,7 +39,6 @@ defmodule Gatling.Tasks.DeployUpgradeTest do
     ))
 
     cleanup
-
   end
 
   def cleanup do

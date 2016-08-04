@@ -14,12 +14,13 @@ defmodule Mix.Tasks.Gatling.Upgrade do
 
     Deploy.mix_deps_get(build_path)
     Deploy.mix_compile(build_path)
+    Deploy.mix_release(build_path)
 
-    version     = Deploy.mix_release(build_path)
+    version = Gatling.Utilities.version(build_path)
     upgrade_dir = Gatling.Utilities.upgrade_dir(project, version)
 
     Deploy.make_deploy_dir(upgrade_dir)
-    Deploy.copy_release_to_deploy(build_path, upgrade_dir, version)
+    Deploy.copy_release_to_deploy(build_path, upgrade_dir)
 
     upgrade_service(project, version)
   end

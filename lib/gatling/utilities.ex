@@ -36,9 +36,18 @@ defmodule Gatling.Utilities do
   end
 
   def version(build_path) do
-    path = Path.join([build_path, "mix.exs"])
-    [{mix_project, _}] = Code.load_file(path)
-    mix_project.project[:version]
+    path         = Path.join([build_path, "mix.exs"])
+    file         = File.read!(path)
+    module_regex = ~r/defmodule\s+(?<module>[\w|\.]+)/
+    module_name  = Regex.named_captures(module_regex, file)["module"]
+    module       = Module.concat([module_name])
+
+    module = case Code.ensure_loaded(module) do
+      {:error, _} -> Code.eval_string(file) |> elem(0) |> elem(1)
+      {:module, _} -> module
+    end
+
+    module.project[:version]
   end
 
   # def nginx_template(domains: domains, port: port)

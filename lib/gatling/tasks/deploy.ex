@@ -17,17 +17,15 @@ defmodule Mix.Tasks.Gatling.Deploy do
   end
 
   defp deploy(project) do
-    deploy_path  = Gatling.Utilities.deploy_dir(project)
-    build_path   = Gatling.Utilities.build_path(project)
-    port         = Gatling.Utilities.available_port
+    deploy_path = Gatling.Utilities.deploy_dir(project)
+    build_path  = Gatling.Utilities.build_path(project)
+    port        = Gatling.Utilities.available_port
 
     mix_deps_get(build_path)
     mix_compile(build_path)
     make_deploy_dir(deploy_path)
-
-    release_version = mix_release(build_path)
-    copy_release_to_deploy(build_path, deploy_path, release_version)
-
+    mix_release(build_path)
+    copy_release_to_deploy(build_path, deploy_path)
     expand_release(project, deploy_path)
     install_nginx_site(build_path, port)
     install_init_script(project, port)
@@ -39,29 +37,28 @@ defmodule Mix.Tasks.Gatling.Deploy do
   end
 
   def mix_compile(build_path) do
-    bash("mix", ~w[compile --force], cd: build_path, message: "Compiling")
+    bash("mix", ~w[compile --force], cd: build_path)
     bash("mix", ~w[phoenix.digest -o public/static], cd: build_path)
   end
 
   def mix_release(build_path) do
-    release_message = bash("mix", ~w[release --no-confirm-missing], cd: build_path, message: "Creating release", into: "")
-    Regex.named_captures(~r/(?<version>\d+\.\d+\.\d\S*)\s+is\s+ready/, release_message)
-    |> Map.fetch!("version")
+    bash("mix", ~w[release --no-confirm-missing], cd: build_path)
   end
 
   def make_deploy_dir(deploy_path) do
     File.mkdir_p(deploy_path)
   end
 
-  def copy_release_to_deploy(build_path, deploy_path, version) do
+  def copy_release_to_deploy(build_path, deploy_path) do
     project      = Path.basename(build_path)
     deploy_path  = Path.join(deploy_path, "#{project}.tar.gz")
-    release_from = [build_path, "rel", project, "releases", version, "#{project}.tar.gz"]
-                 |> Path.join()
+    version      = Gatling.Utilities.version(build_path)
 
-    release_from
+    [build_path, "rel", project, "releases", version, "#{project}.tar.gz"]
+    |> Path.join()
     |> File.cp(deploy_path)
-    log("Copied #{release_from} -> #{deploy_path}")
+
+    log("Release copied to #{deploy_path}")
   end
 
   def expand_release(project, deploy_path) do
