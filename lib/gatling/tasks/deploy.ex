@@ -1,7 +1,7 @@
 defmodule Mix.Tasks.Gatling.Deploy do
   use Mix.Task
 
-  import Gatling.Bash, only: [bash: 3, log: 1]
+  import Gatling.Bash, only: [bash: 2, bash: 3]
 
   @moduledoc """
   - Create a release of git HEAD using Exrm
@@ -52,11 +52,10 @@ defmodule Mix.Tasks.Gatling.Deploy do
 
   def copy_release_to_deploy(release_path, deploy_path) do
     File.cp(release_path, deploy_path)
-    log("Release copied to #{deploy_path}")
   end
 
   def expand_release(deploy_path) do
-    bash("tar", ~w[-xf #{deploy_path}], message: "Extracting #{deploy_path}")
+    bash("tar", ~w[-xf #{deploy_path}])
   end
 
   def install_init_script(project_name, port) do
@@ -64,13 +63,11 @@ defmodule Mix.Tasks.Gatling.Deploy do
     init_path = Gatling.Utilities.etc_path(project_name)
     File.write(init_path, file)
     File.chmod(init_path, 0100)
-    bash("update-rc.d", ~w[#{ project_name } defaults], [])
-    log("Added service #{project_name} to #{Gatling.Utilities.etc_dir}")
+    bash("update-rc.d", ~w[#{ project_name } defaults])
   end
 
   def start_service(project, port) do
     bash("service", ~w[#{project} start], env: [{"PORT", to_string(port)}])
-    log("Started service #{project}")
   end
 
   def install_nginx_site(project, port) do
@@ -80,7 +77,7 @@ defmodule Mix.Tasks.Gatling.Deploy do
       enabled      = Path.join([Gatling.Utilities.nginx_dir, "sites-enabled", project])
       File.write(available, file)
       File.ln_s(available, enabled)
-      bash("nginx", ~w[-s reload], message: "Configuring nginx")
+      bash("nginx", ~w[-s reload])
     else
       Gatling.Bash.log("""
 

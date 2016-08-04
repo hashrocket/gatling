@@ -15,6 +15,8 @@ defmodule Gatling.Tasks.DeployUpgradeTest do
       File.rm_rf("test/sample_project/rel")
     end
 
+    IO.puts("")
+
     :ok
   end
 
