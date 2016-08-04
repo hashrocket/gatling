@@ -84,7 +84,13 @@ defmodule Mix.Tasks.Gatling.Deploy do
       File.ln_s(available, enabled)
       bash("nginx", ~w[-s reload], message: "Configuring nginx")
     else
-      ""
+      Gatling.Bash.log("""
+
+      No 'domains' file detected. If you want to auto-configure nginx,
+      Add a file called 'domains' to the root of your project. See
+      "https://github.com/hashrocket/gatling/tree/master/test/sample_project"
+      for an example.
+      """)
     end
   end
 
