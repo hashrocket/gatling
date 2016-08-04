@@ -23,12 +23,16 @@ defmodule Gatling.Utilities do
 
   def build_dir(project) do
     project   = String.strip(project)
-    build_dir = Application.get_env(:gatling, :build_dir) || fn -> System.user_home end
+    build_dir = Application.get_env(:gatling, :build_dir) || fn ->
+      System.user_home
+    end
     Path.join(build_dir.(), project)
   end
 
   def deploy_dir(project) do
-    deploy_dir = Application.get_env(:gatling, :deploy_dir) || fn -> Path.join([System.user_home, "deployments"]) end
+    deploy_dir = Application.get_env(:gatling, :deploy_dir) || fn ->
+      Path.join([System.user_home, "deployments"])
+    end
     Path.join([deploy_dir.(), project])
   end
 
@@ -38,11 +42,7 @@ defmodule Gatling.Utilities do
 
   def upgrade_dir(project) do
     version = version(project)
-    Path.join([
-      deploy_dir(project),
-      "releases",
-      version,
-    ])
+    Path.join([ deploy_dir(project), "releases", version])
   end
 
   def upgrade_path(project) do
@@ -50,8 +50,14 @@ defmodule Gatling.Utilities do
   end
 
   def built_release_path(project) do
-    [build_dir(project), "rel", project, "releases", version(project), "#{project}.tar.gz"]
-    |> Path.join()
+    Path.join([
+      build_dir(project),
+      "rel",
+      project,
+      "releases",
+      version(project),
+      "#{project}.tar.gz",
+    ])
   end
 
   def available_port do
@@ -85,7 +91,7 @@ defmodule Gatling.Utilities do
   end
 
   def git_hook_path(project) do
-    [build_dir(project), ".git", "hooks", "post-update"] 
+    [build_dir(project), ".git", "hooks", "post-update"]
     |> Path.join()
   end
 

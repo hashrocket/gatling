@@ -23,10 +23,10 @@ defmodule Mix.Tasks.Gatling.Deploy do
     port         = available_port
     release_path = built_release_path(project)
 
-    bash("mix", ~w[deps.get], cd: build_dir)
-    bash("mix", ~w[compile --force], cd: build_dir)
+    bash("mix", ~w[deps.get],                        cd: build_dir)
+    bash("mix", ~w[compile --force],                 cd: build_dir)
     bash("mix", ~w[phoenix.digest -o public/static], cd: build_dir)
-    bash("mix", ~w[release --no-confirm-missing], cd: build_dir)
+    bash("mix", ~w[release --no-confirm-missing],    cd: build_dir)
 
     File.mkdir_p(deploy_path)
     File.cp(release_path, deploy_path)
