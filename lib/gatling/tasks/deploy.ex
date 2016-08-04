@@ -73,10 +73,14 @@ defmodule Mix.Tasks.Gatling.Deploy do
   def install_nginx_site(project, port) do
     if domains = Gatling.Utilities.domains(project) do
       file         = Gatling.Utilities.nginx_template(domains: domains, port: port,)
-      available    = Path.join([Gatling.Utilities.nginx_dir, "sites-available", project])
-      enabled      = Path.join([Gatling.Utilities.nginx_dir, "sites-enabled", project])
+      available    = Gatling.Utilities.nginx_available_path(project)
+      enabled      = Gatling.Utilities.nginx_enabled_path(project)
       File.write(available, file)
-      File.ln_s(available, enabled)
+
+      unless File.exists?(enabled) do
+        File.ln_s(available, enabled)
+      end
+
       bash("nginx", ~w[-s reload])
     else
       Gatling.Bash.log("""

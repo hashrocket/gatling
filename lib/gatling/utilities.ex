@@ -5,6 +5,14 @@ defmodule Gatling.Utilities do
     Application.get_env(:gatling, :nginx_dir) || "/etc/nginx"
   end
 
+  def nginx_available_path(project) do
+    Path.join([nginx_dir, "sites-available", project])
+  end
+
+  def nginx_enabled_path(project) do
+    Path.join([nginx_dir, "sites-enabled", project])
+  end
+
   def etc_dir do
     Application.get_env(:gatling, :etc_dir) || "/etc/init.d"
   end
