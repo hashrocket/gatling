@@ -1,6 +1,4 @@
 defmodule Gatling.Bash do
-  require Logger
-
   def log(message) do
     Mix.Shell.IO.info(message)
     message

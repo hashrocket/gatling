@@ -1,7 +1,8 @@
 defmodule Mix.Tasks.Gatling.Load do
   use Mix.Task
 
-  import Gatling.Bash, only: [bash: 3, log: 1]
+  import Gatling.Bash
+  import Gatling.Utilities
 
   @moduledoc """
     Create a git repository for your mix project. The name of the project must match `:app` in your mix.exs
@@ -19,7 +20,7 @@ defmodule Mix.Tasks.Gatling.Load do
   end
 
   def load(project) do
-    build_dir =  Gatling.Utilities.build_dir(project)
+    build_dir = build_dir(project)
     if File.exists?(build_dir) do
       log(~s(#{build_dir} already exists))
     else
@@ -31,11 +32,11 @@ defmodule Mix.Tasks.Gatling.Load do
   end
 
   def install_post_receive_hook(project) do
-    file = Gatling.Utilities.git_hook_template(project_name: project)
-    path = Gatling.Utilities.git_hook_path(project)
+    file = git_hook_template(project_name: project)
+    path = git_hook_path(project)
 
     File.write(path, file)
-    File.chmod(path, 777)
+    File.chmod(path, 775)
   end
 
 end
