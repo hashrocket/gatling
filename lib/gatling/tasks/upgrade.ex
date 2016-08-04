@@ -9,18 +9,17 @@ defmodule Mix.Tasks.Gatling.Upgrade do
   end
 
   def upgrade(project) do
-    deploy_path  = Gatling.Utilities.deploy_dir(project)
-    build_path   = Gatling.Utilities.build_path(project)
+    build_dir    = Gatling.Utilities.build_dir(project)
+    version      = Gatling.Utilities.version(project)
+    upgrade_dir  = Gatling.Utilities.upgrade_dir(project)
+    upgrade_path = Gatling.Utilities.upgrade_path(project)
+    release_path = Gatling.Utilities.built_release_path(project)
 
-    Deploy.mix_deps_get(build_path)
-    Deploy.mix_compile(build_path)
-    Deploy.mix_release(build_path)
-
-    version = Gatling.Utilities.version(build_path)
-    upgrade_dir = Gatling.Utilities.upgrade_dir(project, version)
-
+    Deploy.mix_deps_get(build_dir)
+    Deploy.mix_compile(build_dir)
+    Deploy.mix_release(build_dir)
     Deploy.make_deploy_dir(upgrade_dir)
-    Deploy.copy_release_to_deploy(build_path, upgrade_dir)
+    Deploy.copy_release_to_deploy(release_path, upgrade_path)
 
     upgrade_service(project, version)
   end

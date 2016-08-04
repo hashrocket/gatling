@@ -4,19 +4,19 @@ if Mix.env == :test do
 
   config :gatling, [
 
-  build_path: fn ->
+  build_dir: fn ->
     Path.join(~w[#{System.cwd} test root home ubuntu])
   end,
 
-  deploy_path: fn ->
+  deploy_dir: fn ->
     Path.join(~w[#{System.cwd} test root home ubuntu deployments])
   end,
 
-  nginx_path: Path.join(
+  nginx_dir: Path.join(
     ~w[#{System.cwd} test root etc nginx]
   ),
 
-  etc_path: Path.join(
+  etc_dir: Path.join(
     ~w[#{System.cwd} test root etc init.d]
   ),
 

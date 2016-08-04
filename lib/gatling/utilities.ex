@@ -1,31 +1,49 @@
 defmodule Gatling.Utilities do
   require EEx
 
-  def nginx_path do
-    Application.get_env(:gatling, :nginx_path) || "/etc/nginx"
+  def nginx_dir do
+    Application.get_env(:gatling, :nginx_dir) || "/etc/nginx"
   end
 
-  def etc_path do
-    Application.get_env(:gatling, :etc_path) || "/etc/init.d"
+  def etc_dir do
+    Application.get_env(:gatling, :etc_dir) || "/etc/init.d"
   end
 
-  def build_path(project_name) do
+  def etc_path(project) do
+    Path.join(etc_dir, project)
+  end
+
+  def build_dir(project_name) do
     project   = String.strip(project_name)
-    build_dir = Application.get_env(:gatling, :build_path) || fn -> System.user_home end
+    build_dir = Application.get_env(:gatling, :build_dir) || fn -> System.user_home end
     Path.join(build_dir.(), project)
   end
 
   def deploy_dir(project) do
-    deploy_path = Application.get_env(:gatling, :deploy_path) || fn -> Path.join([System.user_home, "deployments"]) end
-    Path.join([deploy_path.(), project])
+    deploy_dir = Application.get_env(:gatling, :deploy_dir) || fn -> Path.join([System.user_home, "deployments"]) end
+    Path.join([deploy_dir.(), project])
   end
 
-  def upgrade_dir(project, version) do
+  def deploy_path(project) do
+    Path.join [deploy_dir(project), "#{project}.tar.gz"]
+  end
+
+  def upgrade_dir(project) do
+    version = version(project)
     Path.join([
       deploy_dir(project),
       "releases",
       version,
     ])
+  end
+
+  def upgrade_path(project) do
+    Path.join(upgrade_dir(project), "#{project}.tar.gz")
+  end
+
+  def built_release_path(project) do
+    [build_dir(project), "rel", project, "releases", version(project), "#{project}.tar.gz"]
+    |> Path.join()
   end
 
   def available_port do
@@ -35,8 +53,8 @@ defmodule Gatling.Utilities do
     port_number
   end
 
-  def version(build_path) do
-    path         = Path.join([build_path, "mix.exs"])
+  def version(project) do
+    path         = Path.join([build_dir(project), "mix.exs"])
     file         = File.read!(path)
     module_regex = ~r/defmodule\s+(?<module>[\w|\.]+)/
     module_name  = Regex.named_captures(module_regex, file)["module"]
@@ -48,6 +66,19 @@ defmodule Gatling.Utilities do
     end
 
     module.project[:version]
+  end
+
+  def domains(project) do
+    domain_path = Path.join(build_dir(project), "domains")
+    case File.read(domain_path) do
+      {:ok, txt} -> txt |> String.split(~r/,?\s/, trim: true) |> Enum.join(" ")
+      {:error, _} -> nil
+    end
+  end
+
+  def git_hook_path(project) do
+    [build_dir(project), ".git", "hooks", "post-update"] 
+    |> Path.join()
   end
 
   # def nginx_template(domains: domains, port: port)
