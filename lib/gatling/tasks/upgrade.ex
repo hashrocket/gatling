@@ -2,7 +2,6 @@ defmodule Mix.Tasks.Gatling.Upgrade do
   use Mix.Task
 
   import Gatling.Bash
-  import Gatling.Utilities
   import Mix.Tasks.Gatling.Deploy
 
   def run([project]) do

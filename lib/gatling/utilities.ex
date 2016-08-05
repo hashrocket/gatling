@@ -102,6 +102,12 @@ defmodule Gatling.Utilities do
     |> Path.join()
   end
 
+  def mix_tasks(project) do
+    tasks    = System.cmd("mix", ~w[help], cd: build_dir(project)) |> elem(0)
+    captures = Regex.scan(~r/mix\s+([\w|.]+)/, tasks, capture: :all_but_first) 
+    List.flatten(captures)
+  end
+
   # def nginx_template(domains: domains, port: port)
   EEx.function_from_file(:def, :nginx_template,
     "lib/gatling/sites_available_template.conf.eex",

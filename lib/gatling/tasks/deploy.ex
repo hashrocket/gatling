@@ -2,7 +2,6 @@ defmodule Mix.Tasks.Gatling.Deploy do
   use Mix.Task
 
   import Gatling.Bash
-  import Gatling.Utilities
 
   @moduledoc """
   - Create a release of git HEAD using Exrm
