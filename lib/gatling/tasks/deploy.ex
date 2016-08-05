@@ -27,6 +27,7 @@ defmodule Mix.Tasks.Gatling.Deploy do
     |> expand_release()
     |> install_nginx_site()
     |> install_init_script()
+    |> mix_ecto_setup()
     |> start_service()
   end
 
@@ -77,6 +78,13 @@ defmodule Mix.Tasks.Gatling.Deploy do
       File.write!(available, env.nginx_template)
       unless File.exists?(enabled), do: File.ln_s(available, enabled)
       bash("nginx", ~w[-s reload])
+    end
+    env
+  end
+
+  def mix_ecto_setup(env) do
+    if Enum.find(env.available_tasks, fn(task)-> task == "ecto.create" end) do
+      bash("mix", ~w[do ecto.create, ecto.migrate, run priv/repo/seeds.exs], cd: env.build_dir)
     end
     env
   end

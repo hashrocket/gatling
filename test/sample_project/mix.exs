@@ -15,8 +15,8 @@ defmodule SampleProject.Mixfile do
   defp aliases do
     [
       release: &release/1,
-      compile: fn(_) -> IO.puts "Compiled" end,
-      "deps.get": fn(_)-> IO.puts "Downloaded Dependencies" end,
+      compile:          fn(_)-> IO.puts "Compiled" end,
+      "deps.get":       fn(_)-> IO.puts "Downloaded Dependencies" end,
       "phoenix.digest": fn(_)-> IO.puts "Assets have been compiled" end,
     ]
   end
