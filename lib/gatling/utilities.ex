@@ -69,20 +69,20 @@ defmodule Gatling.Utilities do
 
   def version(project) do
     build_dir    = build_dir(project)
-    path         = Path.join([build_dir "mix.exs"])
+    path         = Path.join(build_dir, "mix.exs")
     file         = File.read!(path)
     module_regex = ~r/defmodule\s+(?<module>[\w|\.]+)/
     module_name  = Regex.named_captures(module_regex, file)["module"]
     module       = Module.concat([module_name])
 
-    File.cd build_dir
-
-    module = case Code.ensure_loaded(module) do
-      {:error, _} -> Code.eval_string(file) |> elem(0) |> elem(1)
-      {:module, _} -> module
+    version = File.cd! build_dir, fn ->
+      module = case Code.ensure_loaded(module) do
+        {:error, _} -> Code.eval_string(file) |> elem(0) |> elem(1)
+        {:module, _} -> module
+      end
+      module.project[:version]
     end
 
-    module.project[:version]
   end
 
   def domains(project) do

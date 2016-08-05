@@ -3,7 +3,7 @@ defmodule SampleProject.Mixfile do
 
   def project do
     [app: :sample_project,
-     version: "0.0.0",
+     version: version,
      aliases: aliases,
    ]
   end
@@ -28,5 +28,12 @@ defmodule SampleProject.Mixfile do
     System.cmd("tar", ~w[cf sample_project.tar.gz sample_project.txt], cd: path)
     Mix.Shell.IO.info "version 0.0.0 is ready"
   end
+
+  defp version do
+    committed_at = System.cmd("git", ~w[log -1 --date=short --pretty=format:%ct])
+                    |> elem(0)
+    "0.0.#{committed_at}"
+  end
+
 
 end

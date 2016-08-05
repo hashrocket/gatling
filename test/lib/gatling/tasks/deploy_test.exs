@@ -43,7 +43,7 @@ defmodule Gatling.Tasks.DeployUpgradeTest do
 
     #test/sample_project/mix.exs
     path = Path.join(
-      [Gatling.Utilities.deploy_dir("sample_project"), "releases", "0.0.0", "sample_project.tar.gz"]
+      [Gatling.Utilities.deploy_dir("sample_project"), "releases", "0.0.1470406670", "sample_project.tar.gz"]
     )
     assert File.exists?(path), path
   end

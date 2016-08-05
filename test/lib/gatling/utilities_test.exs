@@ -39,14 +39,14 @@ defmodule Gatling.UtilitiesTest do
   end
 
   test ".upgrade_dir" do
-    expected_path = "/gatling/test/root/home/ubuntu/deployments/sample_project/releases/0.0.0"
+    expected_path = "/gatling/test/root/home/ubuntu/deployments/sample_project/releases/0.0.1470406670"
     regex = ~r/#{expected_path}$/
     path = Utilities.upgrade_dir("sample_project")
     assert Regex.match?(regex, path)
   end
 
   test ".upgrade_path" do
-    expected_path = "/gatling/test/root/home/ubuntu/deployments/sample_project/releases/0.0.0/sample_project.tar.gz"
+    expected_path = "/gatling/test/root/home/ubuntu/deployments/sample_project/releases/0.0.1470406670/sample_project.tar.gz"
     regex = ~r/#{expected_path}$/
     path = Utilities.upgrade_path("sample_project")
     assert Regex.match?(regex, path)
@@ -75,7 +75,7 @@ defmodule Gatling.UtilitiesTest do
   end
 
    test ".built_release_path" do
-    expected_path = "/gatling/test/root/home/ubuntu/sample_project/rel/sample_project/releases/0.0.0/sample_project.tar.gz"
+    expected_path = "/gatling/test/root/home/ubuntu/sample_project/rel/sample_project/releases/0.0.1470406670/sample_project.tar.gz"
     regex = ~r/#{expected_path}$/
     path = Utilities.built_release_path("sample_project")
     assert Regex.match?(regex, path)
@@ -89,7 +89,7 @@ defmodule Gatling.UtilitiesTest do
    end
 
   test ".version" do
-    assert Utilities.version("sample_project") == "0.0.0"
+    assert Utilities.version("sample_project") == "0.0.1470406670"
   end
 
 end
