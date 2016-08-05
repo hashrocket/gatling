@@ -38,6 +38,7 @@ defmodule GatlingTest do
      :version              => "0.0.1470406670",
      :script_template      => Gatling.Utilities.script_template(project_name: "sample_project", port: 4001),
      :nginx_template       => Gatling.Utilities.nginx_template(domains: domains, port: 4001),
+     :available_tasks      => Gatling.Utilities.mix_tasks("sample_project"),
    }
   end
 

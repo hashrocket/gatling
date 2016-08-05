@@ -24,6 +24,7 @@ defmodule Gatling do
       :version              => version(project),
       :script_template      => script_template(project_name: project, port: port),
       :nginx_template       => nginx_template(domains: domains, port: port),
+      :available_tasks      => mix_tasks(project),
     }
 
   end
