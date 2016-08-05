@@ -88,7 +88,12 @@ defmodule Gatling.Utilities do
     domain_path = Path.join(build_dir(project), "domains")
     case File.read(domain_path) do
       {:ok, txt} -> txt |> String.split(~r/,?\s/, trim: true) |> Enum.join(" ")
-      {:error, _} -> nil
+      {:error, _} -> Gatling.Bash.log("""
+      No 'domains' file detected. If you want to auto-configure nginx,
+      Add a file called 'domains' to the root of your project. See
+      "https://github.com/hashrocket/gatling/tree/master/test/sample_project"
+      for an example.
+      """)
     end
   end
 

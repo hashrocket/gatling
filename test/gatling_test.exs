@@ -1,8 +1,6 @@
 defmodule GatlingTest do
   use ExUnit.Case
 
-  alias Gatling.Utilities
-
   setup do
     build_dir = Gatling.Utilities.build_dir("sample_project")
     File.mkdir_p(build_dir)
@@ -19,8 +17,10 @@ defmodule GatlingTest do
   end
 
   test ".env" do
-    env = Gatling.env("sample_project", 4001)
+    domains = Gatling.Utilities.domains("sample_project")
+    env = Gatling.env("sample_project", port: 4001)
     assert env ==  %{
+     :project              => "sample_project",
      :available_port       => 4001,
      :build_dir            => "/Users/dev/hashrocket/gatling/test/root/home/ubuntu/sample_project",
      :built_release_path   => "/Users/dev/hashrocket/gatling/test/root/home/ubuntu/sample_project/rel/sample_project/releases/0.0.1470406670/sample_project.tar.gz",
@@ -35,7 +35,9 @@ defmodule GatlingTest do
      :nginx_enabled_path   => "/Users/dev/hashrocket/gatling/test/root/etc/nginx/sites-enabled/sample_project",
      :upgrade_dir          => "/Users/dev/hashrocket/gatling/test/root/home/ubuntu/deployments/sample_project/releases/0.0.1470406670",
      :upgrade_path         => "/Users/dev/hashrocket/gatling/test/root/home/ubuntu/deployments/sample_project/releases/0.0.1470406670/sample_project.tar.gz",
-     :version              => "0.0.1470406670"
+     :version              => "0.0.1470406670",
+     :script_template      => Gatling.Utilities.script_template(project_name: "sample_project", port: 4001),
+     :nginx_template       => Gatling.Utilities.nginx_template(domains: domains, port: 4001),
    }
   end
 

@@ -3,27 +3,37 @@ defmodule Mix.Tasks.Gatling.Upgrade do
 
   import Gatling.Bash
   import Gatling.Utilities
+  import Mix.Tasks.Gatling.Deploy
 
   def run([project]) do
     upgrade(project)
   end
 
   def upgrade(project) do
-    build_dir    = build_dir(project)
-    version      = version(project)
-    upgrade_path = upgrade_path(project)
-    upgrade_dir  = upgrade_dir(project)
-    release_path = built_release_path(project)
-
-    bash("mix", ["deps.get"], cd: build_dir)
-    bash("mix", ~w[compile --force], cd: build_dir)
-    bash("mix", ~w[phoenix.digest -o public/static], cd: build_dir)
-    bash("mix", ~w[release --no-confirm-missing], cd: build_dir)
-
-    File.mkdir_p!(upgrade_dir)
-    File.cp!(release_path, upgrade_path)
-
-    bash("service", ~w[#{project} upgrade #{version}], [])
+    Gatling.env(project, port: :find)
+    |> mix_deps_get()
+    |> mix_compile()
+    |> mix_digest()
+    |> mix_release()
+    |> make_upgrade_dir()
+    |> copy_release_to_upgrade()
+    |> upgrade_service()
   end
+
+  def make_upgrade_dir(env) do
+    File.mkdir_p!(env.upgrade_dir)
+    env
+  end
+
+  def copy_release_to_upgrade(env) do
+    File.cp!(env.built_release_path, env.upgrade_path)
+    env
+  end
+
+  def upgrade_service(env) do
+    bash("service", ~w[#{env.project} upgrade #{env.version}], [])
+    env
+  end
+
 
 end

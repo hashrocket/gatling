@@ -1,14 +1,18 @@
 defmodule Gatling do
   import Gatling.Utilities
 
-  def env(project, port\\nil) do
+  def env(project), do: env(project, port: nil)
+  def env(project, [port: port]) do
+    port = if port == :find, do: available_port, else: port
+    domains = domains(project)
     %{
-      :available_port       => port || available_port,
+      :project              => project,
+      :available_port       => port,
       :build_dir            => build_dir(project),
       :built_release_path   => built_release_path(project),
       :deploy_dir           => deploy_dir(project),
       :deploy_path          => deploy_path(project),
-      :domains              => domains(project),
+      :domains              => domains,
       :etc_dir              => etc_dir,
       :etc_path             => etc_path(project),
       :git_hook_path        => git_hook_path(project),
@@ -18,6 +22,8 @@ defmodule Gatling do
       :upgrade_dir          => upgrade_dir(project),
       :upgrade_path         => upgrade_path(project),
       :version              => version(project),
+      :script_template      => script_template(project_name: project, port: port),
+      :nginx_template       => nginx_template(domains: domains, port: port),
     }
 
   end
