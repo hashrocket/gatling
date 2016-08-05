@@ -42,6 +42,11 @@ config :my_app, MyApp.Endpoint, [
 ]
  ```
 
+Add the following to your `.gitignore`:
+```config
+/public/static
+```
+
 Setup your git remote and push to your server:
 
 ```elixir
