@@ -22,11 +22,11 @@ defmodule SampleProject.Mixfile do
   end
 
   defp release(_) do
-    path = "rel/sample_project/releases/0.0.0"
+    path = "rel/sample_project/releases/#{version}"
     File.mkdir_p(path)
-    File.write("rel/sample_project/releases/0.0.0/sample_project.txt", "hello")
+    File.write("rel/sample_project/releases/#{version}/sample_project.txt", "hello")
     System.cmd("tar", ~w[cf sample_project.tar.gz sample_project.txt], cd: path)
-    Mix.Shell.IO.info "version 0.0.0 is ready"
+    Mix.Shell.IO.info "version #{version} is ready"
   end
 
   defp version do

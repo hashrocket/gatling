@@ -19,6 +19,7 @@ defmodule Mix.Tasks.Gatling.Deploy do
 
   def deploy(project) do
     deploy_path  = deploy_path(project)
+    deploy_dir   = deploy_dir(project)
     build_dir    = build_dir(project)
     port         = available_port
     release_path = built_release_path(project)
@@ -28,10 +29,10 @@ defmodule Mix.Tasks.Gatling.Deploy do
     bash("mix", ~w[phoenix.digest -o public/static], cd: build_dir)
     bash("mix", ~w[release --no-confirm-missing],    cd: build_dir)
 
-    File.mkdir_p(deploy_path)
-    File.cp(release_path, deploy_path)
+    File.mkdir_p!(deploy_dir)
+    File.cp!(release_path, deploy_path)
 
-    bash("tar", ~w[-xf #{deploy_path}])
+    bash("tar", ~w[-xf #{project}.tar.gz], cd: deploy_dir )
 
     install_nginx_site(project, port)
     install_init_script(project, port)
@@ -41,8 +42,8 @@ defmodule Mix.Tasks.Gatling.Deploy do
   def install_init_script(project, port) do
     file      = script_template(project_name: project, port: port)
     init_path = etc_path(project)
-    File.write(init_path, file)
-    File.chmod(init_path, 777)
+    File.write!(init_path, file)
+    File.chmod!(init_path, 0o777)
     bash("update-rc.d", ~w[#{project} defaults])
   end
 
@@ -51,7 +52,7 @@ defmodule Mix.Tasks.Gatling.Deploy do
       file         = nginx_template(domains: domains, port: port,)
       available    = nginx_available_path(project)
       enabled      = nginx_enabled_path(project)
-      File.write(available, file)
+      File.write!(available, file)
 
       unless File.exists?(enabled) do
         File.ln_s(available, enabled)

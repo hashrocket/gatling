@@ -23,9 +23,9 @@ defmodule Gatling.Tasks.DeployUpgradeTest do
   test "Deploy, then upgrade" do
     Mix.Tasks.Gatling.Deploy.run(["sample_project"])
 
-    assert File.exists?(Path.join(
-      [Gatling.Utilities.deploy_dir("sample_project"), "sample_project.tar.gz"]
-    ))
+    assert File.exists?(
+      Gatling.Utilities.deploy_path("sample_project")
+    )
 
     assert File.exists?(Path.join(
       [Gatling.Utilities.nginx_dir , "sites-available", "sample_project"]

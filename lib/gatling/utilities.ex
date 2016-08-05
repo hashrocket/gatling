@@ -75,14 +75,13 @@ defmodule Gatling.Utilities do
     module_name  = Regex.named_captures(module_regex, file)["module"]
     module       = Module.concat([module_name])
 
-    version = File.cd! build_dir, fn ->
+    File.cd! build_dir, fn ->
       module = case Code.ensure_loaded(module) do
         {:error, _} -> Code.eval_string(file) |> elem(0) |> elem(1)
         {:module, _} -> module
       end
       module.project[:version]
     end
-
   end
 
   def domains(project) do

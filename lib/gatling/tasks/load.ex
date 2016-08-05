@@ -35,8 +35,8 @@ defmodule Mix.Tasks.Gatling.Load do
     file = git_hook_template(project_name: project)
     path = git_hook_path(project)
 
-    File.write(path, file)
-    File.chmod(path, 775)
+    File.write!(path, file)
+    File.chmod!(path, 0o777)
   end
 
 end
