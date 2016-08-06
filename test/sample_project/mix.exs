@@ -30,9 +30,10 @@ defmodule SampleProject.Mixfile do
   end
 
   defp version do
-    committed_at = System.cmd("git", ~w[log -1 --date=short --pretty=format:%ct])
-                    |> elem(0)
-    "0.0.#{committed_at}"
+   "0.0.1470406670"
+    # committed_at = System.cmd("git", ~w[log -1 --date=short --pretty=format:%ct])
+    #                 |> elem(0)
+    # "0.0.#{committed_at}"
   end
 
 

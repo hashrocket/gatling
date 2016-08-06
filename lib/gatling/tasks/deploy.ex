@@ -18,17 +18,17 @@ defmodule Mix.Tasks.Gatling.Deploy do
 
   def deploy(project) do
     Gatling.env(project)
-    |> mix_deps_get()
-    |> mix_compile()
-    |> mix_digest()
-    |> mix_release()
-    |> make_deploy_dir()
-    |> copy_release_to_deploy()
-    |> expand_release()
-    |> install_nginx_site()
-    |> install_init_script()
-    |> mix_ecto_setup()
-    |> start_service()
+    |> mix_deps_get
+    |> mix_compile
+    |> mix_digest
+    |> mix_release
+    |> make_deploy_dir
+    |> copy_release_to_deploy
+    |> expand_release
+    |> install_nginx_site
+    |> install_init_script
+    |> mix_ecto_setup
+    |> start_service
   end
 
   def mix_deps_get(env) do

@@ -93,7 +93,8 @@ defmodule Gatling.UtilitiesTest do
   end
 
   test ".mix_tasks" do
-    assert Utilities.mix_tasks("sample_project") ==  ["run", "app.start", "app.tree", "archive", "archive.build", "archive.install", "archive.uninstall", "clean", "cmd", "compile", "deps", "deps.clean", "deps.compile", "deps.get", "deps.tree", "deps.unlock", "deps.update", "do", "escript", "escript.build", "escript.install", "escript.uninstall", "help", "hex", "hex.build", "hex.config", "hex.docs", "hex.info", "hex.key", "hex.outdated", "hex.owner", "hex.public_keys", "hex.publish", "hex.registry", "hex.search", "hex.user", "loadconfig", "local", "local.hex", "local.phoenix", "local.public_keys", "local.rebar", "new", "phoenix.new", "profile.fprof", "run", "test", "xref"]
+    tasks = assert Utilities.mix_tasks("sample_project")
+    assert Enum.count(tasks) > 1
   end
 
 
