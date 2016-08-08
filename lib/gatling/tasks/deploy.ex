@@ -17,7 +17,7 @@ defmodule Mix.Tasks.Gatling.Deploy do
   end
 
   def deploy(project) do
-    Gatling.env(project)
+    Gatling.env(project, port: :find)
     |> mix_deps_get
     |> mix_compile
     |> mix_digest

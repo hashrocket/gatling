@@ -9,7 +9,7 @@ defmodule Mix.Tasks.Gatling.Upgrade do
   end
 
   def upgrade(project) do
-    Gatling.env(project, port: :find)
+    Gatling.env(project)
     |> mix_deps_get()
     |> mix_compile()
     |> mix_digest()
