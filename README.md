@@ -4,6 +4,8 @@ Conveniently deploy a bunch of Phoenix apps
 
 The main goal of Gatling is to make it very easy, cheap, and convenient to deploy Phoenix apps.
 
+Gatling is essentially a collection of mix tasks that (from a Git push) automatically create an Exrm release and launches/upgrades it on your server.
+
 ## Instructions
 
 ### Setting up the server

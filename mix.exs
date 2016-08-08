@@ -1,7 +1,7 @@
 defmodule Gatling.Mixfile do
   use Mix.Project
 
-  def version, do: "0.0.4"
+  def version, do: "0.0.5"
   def project do
     [
       app: :gatling,
