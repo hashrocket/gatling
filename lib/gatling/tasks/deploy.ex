@@ -25,10 +25,10 @@ defmodule Mix.Tasks.Gatling.Deploy do
     |> make_deploy_dir
     |> copy_release_to_deploy
     |> expand_release
-    |> install_nginx_site
     |> install_init_script
     |> mix_ecto_setup
     |> start_service
+    |> configure_nginx
   end
 
   def mix_deps_get(env) do
@@ -73,7 +73,7 @@ defmodule Mix.Tasks.Gatling.Deploy do
     env
   end
 
-  def install_nginx_site(%{nginx_available_path: available, nginx_enabled_path: enabled} = env) do
+  def configure_nginx(%{nginx_available_path: available, nginx_enabled_path: enabled} = env) do
     if env.domains do
       File.write!(available, env.nginx_template)
       unless File.exists?(enabled), do: File.ln_s(available, enabled)
