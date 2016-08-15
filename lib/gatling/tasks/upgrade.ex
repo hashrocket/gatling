@@ -17,6 +17,7 @@ defmodule Mix.Tasks.Gatling.Upgrade do
     |> make_upgrade_dir()
     |> copy_release_to_upgrade()
     |> upgrade_service()
+    |> configure_nginx()
   end
 
   def make_upgrade_dir(env) do
@@ -33,6 +34,5 @@ defmodule Mix.Tasks.Gatling.Upgrade do
     bash("service", ~w[#{env.project} upgrade #{env.version}], [])
     env
   end
-
 
 end
