@@ -25,14 +25,14 @@ defmodule GatlingTest do
     domains = Gatling.Utilities.domains("sample_project")
     env = Gatling.env("sample_project", port: 4001)
 
-     assert env.available_port       == 4001
-     assert env.project              == "sample_project"
-     assert env.domains              == domains
-
-     assert env.script_template      == Gatling.Utilities.script_template(project_name: "sample_project", port: 4001)
-     assert env.nginx_template       == Gatling.Utilities.nginx_template(domains: domains, port: 4001)
-     assert env.available_tasks      == Gatling.Utilities.mix_tasks("sample_project")
-     assert env.version              == "0.0.1470406670"
+     assert env.available_port         == 4001
+     assert env.project                == "sample_project"
+     assert env.domains                == domains
+     assert env.script_template        == Gatling.Utilities.script_template(project_name: "sample_project", port: 4001)
+     assert env.nginx_template         == Gatling.Utilities.nginx_template(domains: domains, port: 4001)
+     assert env.available_tasks        == Gatling.Utilities.mix_tasks("sample_project")
+     assert env.version                == "0.0.1470406670"
+     assert env.deploy_callback_module == Gatling.Deploy # test/sample_project/deploy.ex
 
      env.build_dir            |>  matches?("/root/home/ubuntu/sample_project")
      env.built_release_path   |>  matches?("/root/home/ubuntu/sample_project/rel/sample_project/releases/0.0.1470406670/sample_project.tar.gz")

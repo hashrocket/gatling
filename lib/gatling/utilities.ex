@@ -108,6 +108,17 @@ defmodule Gatling.Utilities do
     List.flatten(captures)
   end
 
+  def deploy_callback_module(project) do
+    deploy_callback_path = Path.join(build_dir(project), "deploy.ex")
+    if File.exists? deploy_callback_path do
+      Code.load_file(deploy_callback_path)
+      |> List.first()
+      |> elem(0)
+    else
+      nil
+    end
+  end
+
   # def nginx_template(domains: domains, port: port)
   EEx.function_from_file(:def, :nginx_template,
     "lib/gatling/sites_available_template.conf.eex",
