@@ -84,7 +84,7 @@ Thats it!!! You are golden.
 In your project root, create a file called `deploy.ex`. Define any of the following functions to to wrap the Gatling deployment actions:
 
 ```elixir
-defmodule Gatling.DeployCallbacks do
+defmodule SampleProject.DeployCallbacks do
   
   def before_mix_deps_get(env)
   def after_mix_deps_get(env)

@@ -97,8 +97,12 @@ defmodule Gatling.UtilitiesTest do
     assert Enum.count(tasks) > 1
   end
 
-  test ".deploy_callback_module" do
-    module = Utilities.deploy_callback_module("sample_project")
+  test ".upgrade_callback_module" do
+    module = Utilities.callback_module("sample_project", task: "upgrade")
+    assert module
+    assert module.before_mix_deps_get(nil) == "before_mix_deps_get"
+
+    module = Utilities.callback_module("sample_project", task: "deploy")
     assert module
     assert module.before_mix_deps_get(nil) == "before_mix_deps_get"
   end

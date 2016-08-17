@@ -1,4 +1,4 @@
-defmodule SampleProject.DeployCallbacks do
+defmodule SampleProject.UpgradeCallbacks do
   def before_mix_deps_get(_env) do
     "before_mix_deps_get"
   end

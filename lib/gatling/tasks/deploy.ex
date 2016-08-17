@@ -1,6 +1,5 @@
 defmodule Mix.Tasks.Gatling.Deploy do
   use Mix.Task
-  use Gatling.Call
 
   import Gatling.Bash
 
@@ -93,6 +92,31 @@ defmodule Mix.Tasks.Gatling.Deploy do
   def start_service(env) do
     bash("service", ~w[#{env.project} start], env: [{"PORT", to_string(env.available_port)}])
     env
+  end
+
+  def call(env, action) do
+    callback(env, action, :before)
+    apply(__MODULE__, action, [env])
+    callback(env, action, :after)
+    env
+  end
+
+  def callback(env, type, action) do
+    module          = env.deploy_callback_module
+    callback_action = callback_action(type, action)
+
+    if function_exported?(module, callback_action, 1) do
+      apply(module, callback_action, [env])
+    end
+
+    nil
+  end
+
+  def callback_action(type, action) do
+    [type, action]
+    |> Enum.map(&to_string/1)
+    |> Enum.join("_")
+    |> String.to_atom()
   end
 
 end

@@ -108,12 +108,10 @@ defmodule Gatling.Utilities do
     List.flatten(captures)
   end
 
-  def deploy_callback_module(project) do
-    deploy_callback_path = Path.join(build_dir(project), "deploy.ex")
-    if File.exists? deploy_callback_path do
-      Code.load_file(deploy_callback_path)
-      |> List.first()
-      |> elem(0)
+  def callback_module(project, [task: task_name]) do
+    callback_path = Path.join(build_dir(project), "#{task_name}.ex")
+    if File.exists? callback_path do
+      Code.load_file(callback_path) |> List.first() |> elem(0)
     else
       nil
     end
