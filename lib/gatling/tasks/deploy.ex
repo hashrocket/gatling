@@ -1,5 +1,6 @@
 defmodule Mix.Tasks.Gatling.Deploy do
   use Mix.Task
+  use Gatling.Call
 
   import Gatling.Bash
 
@@ -18,17 +19,17 @@ defmodule Mix.Tasks.Gatling.Deploy do
 
   def deploy(project) do
     Gatling.env(project, port: :find)
-    |> mix_deps_get
-    |> mix_compile
-    |> mix_digest
-    |> mix_release
-    |> make_deploy_dir
-    |> copy_release_to_deploy
-    |> expand_release
-    |> install_init_script
-    |> mix_ecto_setup
-    |> start_service
-    |> configure_nginx
+    |> call(:mix_deps_get)
+    |> call(:mix_compile)
+    |> call(:mix_digest)
+    |> call(:mix_release)
+    |> call(:make_deploy_dir)
+    |> call(:copy_release_to_deploy)
+    |> call(:expand_release)
+    |> call(:install_init_script)
+    |> call(:mix_ecto_setup)
+    |> call(:start_service)
+    |> call(:configure_nginx)
   end
 
   def mix_deps_get(env) do

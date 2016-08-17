@@ -100,7 +100,7 @@ defmodule Gatling.UtilitiesTest do
   test ".deploy_callback_module" do
     module = Utilities.deploy_callback_module("sample_project")
     assert module
-    assert module.before_mix_deps_get(nil) == "Success"
+    assert module.before_mix_deps_get(nil) == "before_mix_deps_get"
   end
 
 end

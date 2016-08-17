@@ -1,10 +1,9 @@
 defmodule Gatling.Deploy do
-  def before_mix_deps_get(env) do
-    IO.puts "Hello"
+  def before_mix_deps_get(_env) do
+    "before_mix_deps_get"
   end
 
-  def after_mix_deps_get(env) do
-    IO.puts "Hello"
-    env
+  def after_mix_deps_get(_env) do
+    "after_mix_deps_get"
   end
 end
