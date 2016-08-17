@@ -77,6 +77,54 @@ Once your app is running do the following:
 And that's it! You'll see the new version being deployed with no downtime!.
 Thats it!!! You are golden.
 
+##Callbacks
+
+### Gatling.Tasks.Deploy
+
+In your project root, create a file called `deploy.ex`. Define any of the following functions to to wrap the Gatling deployment actions:
+
+```elixir
+defmodule Gatling.DeployCallbacks do
+  
+  def before_mix_deps_get(env)
+  def after_mix_deps_get(env)
+
+  def before_mix_compile(env)
+  def after_mix_compile(env)
+
+  def before_mix_digest(env)
+  def after_mix_digest(env)
+
+  def before_mix_release(env)
+  def after_mix_release(env)
+
+  def before_make_deploy_dir(env)
+  def after_make_deploy_dir(env)
+
+  def before_copy_release_to_deploy(env)
+  def after_copy_release_to_deploy(env)
+
+  def before_expand_release(env)
+  def after_expand_release(env)
+
+  def before_install_init_script(env)
+  def after_install_init_script(env)
+
+  def before_mix_ecto_setup(env)
+  def after_mix_ecto_setup(env)
+
+  def before_start_service(env)
+  def after_start_service(env)
+
+  def before_configure_nginx(env)
+  def after_configure_nginx(env)
+
+end
+
+```
+
+__Note:__ the `env` is passed to every function. It is a READ only map that use can use. Returning `env` from a callback function will have not effect on the rest of the deployment process. [Here](/env.example.exs) is an example of the `env` that is passed in.
+
 ### Development
 
 ```
