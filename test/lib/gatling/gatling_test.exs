@@ -30,6 +30,7 @@ defmodule GatlingTest do
                     |> String.replace(~r/\"\s*(.+\/test)/, "\"")
     File.write("env.example.exs", example_file)
 
+    assert %Gatling.Env{} = env
     assert env.available_port          == 4001
     assert env.project                 == "sample_project"
     assert env.domains                 == domains

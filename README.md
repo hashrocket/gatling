@@ -123,7 +123,7 @@ end
 
 ```
 
-__Note:__ the `env` is passed to every function. It is a READ only map you can use. Returning `env` from a callback function will have not effect on the rest of the deployment process. [Here](/env.example.exs) is an example of the `env` that is passed in.
+__Note:__ the `env` is passed to every function. It is a READ only struct you can use. Returning `env` from a callback function will have no effect on the rest of the deployment process. [Here](/env.example.exs) is an example of the `env` that is passed in.
 
 ### Gatling.Tasks.Upgrade
 
@@ -159,7 +159,7 @@ defmodule SampleProject.UpgradeCallbacks do
 end
 ```
 
-__Note:__ the `env` is passed to every function. It is a READ only map you can use. Returning `env` from a callback function will have not effect on the rest of the upgrade process. [Here](/env.example.exs) is an example of the `env` that is passed in.
+__Note:__ the `env` is passed to every function. It is a READ only struct you can use. Returning `env` from a callback function will have no effect on the rest of the upgrade process. [Here](/env.example.exs) is an example of the `env` that is passed in.
 
 
 #### System Commands in your callbacks.
