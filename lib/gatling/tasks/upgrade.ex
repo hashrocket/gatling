@@ -63,29 +63,25 @@ defmodule Mix.Tasks.Gatling.Upgrade do
     env
   end
 
-  def call(env, action) do
+  defp call(env, action) do
     callback(env, action, :before)
     apply(__MODULE__, action, [env])
     callback(env, action, :after)
     env
   end
 
-  def callback(env, type, action) do
+  defp callback(env, action, type) do
     module          = env.upgrade_callback_module
-    callback_action = callback_action(type, action)
+    callback_action = [type, action]
+                      |> Enum.map(&to_string/1)
+                      |> Enum.join("_")
+                      |> String.to_atom()
 
     if function_exported?(module, callback_action, 1) do
       apply(module, callback_action, [env])
     end
 
     nil
-  end
-
-  def callback_action(type, action) do
-    [type, action]
-    |> Enum.map(&to_string/1)
-    |> Enum.join("_")
-    |> String.to_atom()
   end
 
 end

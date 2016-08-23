@@ -4,10 +4,10 @@ defmodule Mix.Tasks.Gatling.Deploy do
   import Gatling.Bash
 
   @moduledoc """
-  - Create a release of git HEAD using Exrm
+  - Create a release of the last commit using EXRM
   - Create a init script for the app so it will reboot on a server reboot
-  - Configure Nginx go serve it
   - Start the app
+  - Configure Nginx go serve it
   """
 
   @shortdoc "Create an exrm release of the given project and deploy it"
@@ -16,7 +16,7 @@ defmodule Mix.Tasks.Gatling.Deploy do
     deploy(project)
   end
 
-  def deploy(project) do
+  defp deploy(project) do
     Gatling.env(project, port: :find)
     |> call(:mix_deps_get)
     |> call(:mix_compile)
@@ -94,29 +94,25 @@ defmodule Mix.Tasks.Gatling.Deploy do
     env
   end
 
-  def call(env, action) do
+  defp call(env, action) do
     callback(env, action, :before)
     apply(__MODULE__, action, [env])
     callback(env, action, :after)
     env
   end
 
-  def callback(env, type, action) do
+  defp callback(env, action, type) do
     module          = env.deploy_callback_module
-    callback_action = callback_action(type, action)
+    callback_action = [type, action]
+                      |> Enum.map(&to_string/1)
+                      |> Enum.join("_")
+                      |> String.to_atom()
 
     if function_exported?(module, callback_action, 1) do
       apply(module, callback_action, [env])
     end
 
     nil
-  end
-
-  def callback_action(type, action) do
-    [type, action]
-    |> Enum.map(&to_string/1)
-    |> Enum.join("_")
-    |> String.to_atom()
   end
 
 end
