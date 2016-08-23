@@ -20,7 +20,7 @@
  nginx_available_path: "/root/etc/nginx/sites-available/sample_project",
  nginx_dir: "/root/etc/nginx",
  nginx_enabled_path: "/root/etc/nginx/sites-enabled/sample_project",
- nginx_template: "server {\n  listen 80;\n  server_name www.example.com sample_project.hashrocket.com api.example.com;\n\n  location / {\n    proxy_set_header X-Real-IP $remote_addr;\n    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n    proxy_set_header Host $http_host;\n    proxy_redirect off;\n    proxy_pass http://localhost:4001;\n  }\n\n}\n",
+ nginx_template: "server {\n  listen 80;\n  server_name www.example.com sample_project.hashrocket.com api.example.com;\n\n  location / {\n    proxy_set_header X-Real-IP $remote_addr;\n    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n    proxy_set_header Host $http_host;\n    proxy_redirect off;\n    proxy_pass http://localhost:4001;\n    proxy_set_header Upgrade $http_upgrade;\n    proxy_set_header Connection \"upgrade\";\n  }\n\n}\n",
  project: "sample_project",
  script_template: "#!/bin/sh\n\n### BEGIN INIT INFO\n# Provides:          sample_project\n# Required-Start:    $local_fs $network $named $time $syslog\n# Required-Stop:     $local_fs $network $named $time $syslog\n# Default-Start:     2 3 4 5\n# Default-Stop:      0 1 6\n# Description:       Plug Application: sample_project\n### END INIT INFO\n\nexport MIX_ENV=prod\nexport PORT=4001\nexport HOME=/Users/micah/deployments/sample_project\n\n/Users/micah/deployments/sample_project/bin/sample_project \"$1\" \"$2\"\n",
  upgrade_callback_module: SampleProject.UpgradeCallbacks,
