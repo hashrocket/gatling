@@ -19,7 +19,7 @@ $ ssh server.address
 Follow instructions [here](http://elixir-lang.org/install.html#unix-and-unix-like) to install elixir
 ```bash
 $ sudo apt-get install nginx
-$ mix archive.install https://github.com/hashrocket/gatling/raw/master/releases/gatling-0.0.5.ez
+$ mix archive.install https://github.com/hashrocket/gatling_archives/raw/master/gatling-0.0.5.ez
 ```
 
 ###  Deploying your app
