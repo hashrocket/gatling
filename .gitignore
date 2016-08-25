@@ -3,5 +3,6 @@
 /deps
 /doc
 /tmp
+/archives
 
 erl_crash.dump
