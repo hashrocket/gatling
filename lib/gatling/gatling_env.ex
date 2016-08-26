@@ -1,4 +1,5 @@
 defmodule Gatling.Env do
+
   defstruct ~w[
       available_port
       available_tasks

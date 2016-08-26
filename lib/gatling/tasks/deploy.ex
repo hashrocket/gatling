@@ -12,11 +12,19 @@ defmodule Mix.Tasks.Gatling.Deploy do
 
   @shortdoc "Create an exrm release of the given project and deploy it"
 
+  @type gatling_env :: %Gatling.Env{}
+  @type project_name :: binary()
+
+  @spec run([project_name]) :: gatling_env
   def run([project]) do
     deploy(project)
   end
 
-  defp deploy(project) do
+  @spec deploy([project_name]) :: gatling_env
+  @doc """
+  The main function of `Mix.Tasks.Gatling.Deploy`
+  """
+  def deploy(project) do
     Gatling.env(project, port: :find)
     |> call(:mix_deps_get)
     |> call(:mix_compile)
@@ -31,48 +39,100 @@ defmodule Mix.Tasks.Gatling.Deploy do
     |> call(:configure_nginx)
   end
 
-  def mix_deps_get(env) do
+  @spec mix_deps_get(gatling_env) :: gatling_env
+  @doc """
+  Run the mix task `mix deps.get` in the project being deployed
+  """
+  def mix_deps_get(%Gatling.Env{}=env) do
     bash("mix", ~w[deps.get], cd: env.build_dir)
     env
   end
 
-  def mix_compile(env) do
+  @spec mix_compile(gatling_env) :: gatling_env
+  @doc """
+  Compile the application being deployed
+  """
+  def mix_compile(%Gatling.Env{}=env) do
     bash("mix", ~w[compile --force], cd: env.build_dir)
     env
   end
 
-  def mix_digest(env) do
+  @spec mix_digest(gatling_env) :: gatling_env
+  @doc """
+  Create static phoenix files
+  """
+  def mix_digest(%Gatling.Env{}=env) do
     bash("mix", ~w[phoenix.digest -o public/static], cd: env.build_dir)
     env
   end
 
-  def mix_release(env) do
+  @spec mix_release(gatling_env) :: gatling_env
+  @doc """
+  Generate a release of the deploying project with [exrm](http://github.com/bitwalker/exrm)
+  """
+  def mix_release(%Gatling.Env{}=env) do
     bash("mix", ~w[release --no-confirm-missing],cd: env.build_dir)
     env
   end
 
-  def make_deploy_dir(env) do
+  @spec make_deploy_dir(gatling_env) :: gatling_env
+  @doc """
+  Create a directory in the build path of the `project`
+
+  """
+  def make_deploy_dir(%Gatling.Env{}=env) do
     File.mkdir_p!(env.deploy_dir)
     env
   end
 
-  def copy_release_to_deploy(env) do
+  @spec copy_release_to_deploy(gatling_env) :: gatling_env
+  @doc """
+  Copy the generated release into the deployment directory
+  """
+  def copy_release_to_deploy(%Gatling.Env{}=env) do
     File.cp!(env.built_release_path, env.deploy_path)
     env
   end
 
-  def expand_release(env) do
+  @spec expand_release(gatling_env) :: gatling_env
+  @doc """
+  Expand the generated Exrm release
+  """
+  def expand_release(%Gatling.Env{}=env) do
     bash("tar", ~w[-xf #{env.project}.tar.gz], cd: env.deploy_dir )
     env
   end
 
-  def install_init_script(env) do
+  @spec install_init_script(gatling_env) :: gatling_env
+  @doc """
+  Create a system.d script and install it in `/etc/init.d/<project_name>`
+  If the server restarts, the deploying project will boot automatically.
+
+  Also makes the following comands available in your deployment server:
+
+  ```bash
+  $ sudo service <project> start|start_boot <file>|foreground|stop|restart|reboot|ping|rpc <m> <f> [<a>]|console|console_clean|console_boot <file>|attach|remote_console|upgrade|escript|command <m> <f> <args>
+  ```
+  """
+  def install_init_script(%Gatling.Env{}=env) do
     File.write!(env.etc_path, env.script_template)
     File.chmod!(env.etc_path, 0o777)
     bash("update-rc.d", ~w[#{env.project} defaults])
     env
   end
 
+  @spec configure_nginx(gatling_env) :: gatling_env
+  @doc """
+  Create an nginx.cong file to configure a reverse proxy to the deploying application. Install the file in: 
+
+  `/etc/nginx/sites-available/<project>`
+
+  and symlink it in:
+
+  - `/etc/nginx/sites-enabled/<project>`
+
+  Then reload nginx's configuration
+  """
   def configure_nginx(%{nginx_available_path: available, nginx_enabled_path: enabled} = env) do
     if env.domains do
       File.write!(available, env.nginx_template)
@@ -82,37 +142,46 @@ defmodule Mix.Tasks.Gatling.Deploy do
     env
   end
 
-  def mix_ecto_setup(env) do
+  @spec mix_ecto_setup(gatling_env) :: gatling_env
+  @doc """
+  If the task 'mix ecto.create` is available (it is assumed the deploying application has Ecto) then creat the database, run migrations, and run the seeds file.
+  """
+  def mix_ecto_setup(%Gatling.Env{}=env) do
     if Enum.find(env.available_tasks, fn(task)-> task == "ecto.create" end) do
       bash("mix", ~w[do ecto.create, ecto.migrate, run priv/repo/seeds.exs], cd: env.build_dir)
-    end
-    env
-  end
-
-  def start_service(env) do
-    bash("service", ~w[#{env.project} start], env: [{"PORT", to_string(env.available_port)}])
-    env
-  end
-
-  defp call(env, action) do
-    callback(env, action, :before)
-    apply(__MODULE__, action, [env])
-    callback(env, action, :after)
-    env
-  end
-
-  defp callback(env, action, type) do
-    module          = env.deploy_callback_module
-    callback_action = [type, action]
-                      |> Enum.map(&to_string/1)
-                      |> Enum.join("_")
-                      |> String.to_atom()
-
-    if function_exported?(module, callback_action, 1) do
-      apply(module, callback_action, [env])
+      end
+      env
     end
 
-    nil
-  end
+    @spec start_service(gatling_env) :: gatling_env
+    @doc """
+      Start the newly created service with `$ service <project> start`
 
-end
+    """
+    def start_service(%Gatling.Env{}=env) do
+      bash("service", ~w[#{env.project} start], env: [{"PORT", to_string(env.available_port)}])
+      env
+    end
+
+    defp call(env, action) do
+      callback(env, action, :before)
+      apply(__MODULE__, action, [env])
+      callback(env, action, :after)
+      env
+    end
+
+    defp callback(env, action, type) do
+      module          = env.deploy_callback_module
+      callback_action = [type, action]
+                        |> Enum.map(&to_string/1)
+                        |> Enum.join("_")
+                        |> String.to_atom()
+
+      if function_exported?(module, callback_action, 1) do
+        apply(module, callback_action, [env])
+      end
+
+      nil
+    end
+
+  end
