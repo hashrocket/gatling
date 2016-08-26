@@ -16,7 +16,6 @@ defmodule Mix.Tasks.Gatling.Upgrade do
     |> call(:make_upgrade_dir)
     |> call(:copy_release_to_upgrade)
     |> call(:upgrade_service)
-    |> call(:configure_nginx)
   end
 
   def mix_deps_get(env) do
@@ -46,15 +45,6 @@ defmodule Mix.Tasks.Gatling.Upgrade do
 
   def copy_release_to_upgrade(env) do
     File.cp!(env.built_release_path, env.upgrade_path)
-    env
-  end
-
-  def configure_nginx(%{nginx_available_path: available, nginx_enabled_path: enabled} = env) do
-    if env.domains do
-      File.write!(available, env.nginx_template)
-      unless File.exists?(enabled), do: File.ln_s(available, enabled)
-      bash("nginx", ~w[-s reload])
-    end
     env
   end
 
