@@ -45,12 +45,15 @@ defmodule Gatling.Mixfile do
   end
 
   defp aliases do
-    filename = "gatling-#{version}.ez"
-    [ build: [
-        "compile",
-        "archive.build -o ./releases/#{filename}"
-      ]
-    ]
+    [ build: [ &build_releases/1]]
+  end
+
+  defp build_releases(_) do
+    Mix.Tasks.Compile.run([])
+    Mix.Tasks.Archive.Build.run([])
+    Mix.Tasks.Archive.Build.run(["--output=gatling.ez"])
+    File.rename("gatling.ez", "./archives/gatling.ez")
+    File.rename("gatling-#{version}.ez", "./archives/gatling-#{version}.ez")
   end
 
 end
