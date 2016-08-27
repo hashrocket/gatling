@@ -182,10 +182,24 @@ And that's it. That function will be called right before `mix deps get`
 ### Development
 
 ```
-$ git clone https://github.com/hashrocket/gatling
+$ git clone https://github.com/hashrocket/gatling.git
 $ cd gatling
 $ mix deps.get
+#Clone the archives repo
+$ git clone https://github.com/hashrocket/gatling_archives.git
 ```
+
+### Releases
+
+To create a new release, take the following steps:
+
+1. Bump your verson number in `mix.exs`
+2. `$ mix build`
+3. `$ cd gatling_archives`
+4. `$ git commit -m "release v<version>"`
+5. `$ git push origin master`
+6. `$ cd ../ && git tag v<version>`
+7. `$ git push origin <tag>`
 ---
 
 ### About
