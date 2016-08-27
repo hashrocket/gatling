@@ -4,5 +4,6 @@
 /doc
 /tmp
 /archives
+/gatling_archives
 
 erl_crash.dump
