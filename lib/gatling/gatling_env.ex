@@ -1,5 +1,7 @@
 defmodule Gatling.Env do
-
+  @moduledoc """
+  The %Gatling.Env{} struct
+  """
   defstruct ~w[
       available_port
       available_tasks

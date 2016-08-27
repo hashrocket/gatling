@@ -1,26 +1,72 @@
 defmodule Gatling.Utilities do
   require EEx
 
+  @moduledoc """
+  Used by Gatling to generate the `%Gatling.Env{}`
+  """
+  @type project :: binary()
+
+  @spec nginx_dir() :: binary()
+  @doc """
+  Default system path to nginx
+
+  `/etc/nginx`
+  """
   def nginx_dir do
     Application.get_env(:gatling, :nginx_dir) || "/etc/nginx"
   end
 
+  @spec nginx_available_path(project) :: binary()
+  @doc """
+  Default system path to nginx sites-available
+
+  `/etc/nginx/sites-available/`
+  """
   def nginx_available_path(project) do
     Path.join([nginx_dir, "sites-available", project])
   end
 
+  @spec nginx_enabled_path(project) :: binary()
+  @doc """
+  Default system path to nginx sites-enabled
+
+  `/etc/nginx/sites-enabeld`
+  """
   def nginx_enabled_path(project) do
     Path.join([nginx_dir, "sites-enabled", project])
   end
 
+  @spec etc_dir() :: binary()
+  @doc """
+  Default system path to linux init.d scripts
+
+  `/etc/init.d/`
+  """
   def etc_dir do
     Application.get_env(:gatling, :etc_dir) || "/etc/init.d"
   end
 
+  @spec etc_path(project) :: binary()
+  @doc """
+  Path to project's init.d script
+
+  `/etc/init.d/<project>`
+  """
   def etc_path(project) do
     Path.join(etc_dir, project)
   end
 
+  @spec build_dir(project) :: binary()
+  @doc """
+  Path to the git repo for given project
+
+  This the build steps heppen here:
+  - Install dependencies
+  - Compile
+  - Generate release
+
+  `~/<project>/`
+  """
   def build_dir(project) do
     project   = String.strip(project)
     build_dir = Application.get_env(:gatling, :build_dir) || fn ->
@@ -29,6 +75,12 @@ defmodule Gatling.Utilities do
     Path.join(build_dir.(), project)
   end
 
+  @spec deploy_dir(project) :: binary()
+  @doc """
+  Directory to running applications
+
+  `~/deployments/`
+  """
   def deploy_dir(project) do
     deploy_dir = Application.get_env(:gatling, :deploy_dir) || fn ->
       Path.join([System.user_home, "deployments"])
@@ -36,19 +88,43 @@ defmodule Gatling.Utilities do
     Path.join([deploy_dir.(), project])
   end
 
+  @spec deploy_path(project) :: binary()
+  @doc """
+  Path to deployed project
+
+  `~/deployments/<project>`
+  """
   def deploy_path(project) do
     Path.join [deploy_dir(project), "#{project}.tar.gz"]
   end
 
+  @spec upgrade_dir(project) :: binary()
+  @doc """
+  Path to put the "upgrade" releases
+
+  `~/deployments/<project>/releases/<version>`
+  """
   def upgrade_dir(project) do
     version = version(project)
     Path.join([ deploy_dir(project), "releases", version])
   end
 
+  @spec upgrade_path(project) :: binary()
+  @doc """
+  Path to put the "upgrade" release's .tar file
+
+  `~/deployments/<project>/releases/<version>/<project>.tar.gx`
+  """
   def upgrade_path(project) do
     Path.join(upgrade_dir(project), "#{project}.tar.gz")
   end
 
+  @spec built_release_path(project) :: binary()
+  @doc """
+  Location of the release after it's been generated. Located inside the `build_dir`
+
+  `~/<project>/rel/<project>/releases/<version>/<project>.tar.gx`
+  """
   def built_release_path(project) do
     Path.join([
       build_dir(project),
@@ -60,6 +136,10 @@ defmodule Gatling.Utilities do
     ])
   end
 
+  @spec available_port() :: integer()
+  @doc """
+  Find an open port
+  """
   def available_port do
     {:ok, port} = :gen_tcp.listen(0, [])
     {:ok, port_number} = :inet.port(port)
@@ -67,6 +147,10 @@ defmodule Gatling.Utilities do
     port_number
   end
 
+  @spec version(project) :: binary()
+  @doc """
+  Find the version number of the project being deployed
+  """
   def version(project) do
     build_dir    = build_dir(project)
     path         = Path.join(build_dir, "mix.exs")
@@ -84,6 +168,10 @@ defmodule Gatling.Utilities do
     end
   end
 
+  @spec domains(project) :: binary()
+  @doc """
+  Read the projects `./domains` file to be used when configuring nginx
+  """
   def domains(project) do
     domain_path = Path.join(build_dir(project), "domains")
     case File.read(domain_path) do
@@ -97,17 +185,31 @@ defmodule Gatling.Utilities do
     end
   end
 
+  @spec domains(project) :: binary()
+  @doc """
+  Path to the projects git post-update hook
+
+  `~/<project>/.git/hooks/post-update`
+  """
   def git_hook_path(project) do
     [build_dir(project), ".git", "hooks", "post-update"]
     |> Path.join()
   end
 
+  @spec mix_tasks(project) :: list(binary())
+  @doc """
+  List of all available mix tasks that can be run by the given project
+  """
   def mix_tasks(project) do
     tasks    = System.cmd("mix", ~w[help], cd: build_dir(project)) |> elem(0)
-    captures = Regex.scan(~r/mix\s+([\w|.]+)/, tasks, capture: :all_but_first) 
+    captures = Regex.scan(~r/mix\s+([\w|.]+)/, tasks, capture: :all_but_first)
     List.flatten(captures)
   end
 
+  @spec callback_module(project, [task: :upgrade|:deploy]) :: module()
+  @doc """
+  Module defined in the project under `./upgrade` or `./deploy`
+  """
   def callback_module(project, [task: task_name]) do
     callback_path = Path.join(build_dir(project), "#{task_name}.ex")
     if File.exists? callback_path do
@@ -117,23 +219,49 @@ defmodule Gatling.Utilities do
     end
   end
 
+  @spec nginx_template([domains: list(), port: integer()]) :: binary()
+  @doc """
+  Template used to configure nginx
+
+  ```eex
+  #{File.read!("lib/gatling/sites_available_template.conf.eex")}
+  ```
+  """
   # def nginx_template(domains: domains, port: port)
   EEx.function_from_file(:def, :nginx_template,
-    "lib/gatling/sites_available_template.conf.eex",
-    [:assigns]
+  "lib/gatling/sites_available_template.conf.eex",
+  [:assigns]
   )
 
+  @spec script_template([project_name: project, port: integer()]) :: binary()
+  @doc """
+  Template used for the init.d script.
+
+  If/when the server starts, this will boot your project
+
+  ```eex
+  #{File.read!("lib/gatling/init_script_template.sh.eex")}
+  ```
+  """
   # def script_template(project_name: project_name, port: port)
   EEx.function_from_file(:def, :script_template,
-   "lib/gatling/init_script_template.sh.eex",
-    [:assigns]
+  "lib/gatling/init_script_template.sh.eex",
+  [:assigns]
   )
 
-  # def git_hookt_template(project_name: project_name)
+  @spec git_hook_template([domains: list(), port: integer()]) :: binary()
+  @doc """
+  Template used when loading a new project for the git `post-update` hook
+
+  ```txt
+  #{File.read!("lib/gatling/git_hook_template.sh.eex")}
+  ```
+  """
+  # def git_hook_template(project_name: project_name)
   EEx.function_from_file( :def,
-    :git_hook_template,
-    "lib/gatling/git_hook_template.sh.eex",
-    [:assigns]
+  :git_hook_template,
+  "lib/gatling/git_hook_template.sh.eex",
+  [:assigns]
   )
 
 end

@@ -11,15 +11,14 @@ defmodule Mix.Tasks.Gatling.Upgrade do
   @shortdoc "Hot upgrade the given project"
 
   @type gatling_env :: %Gatling.Env{}
-  @type project_name :: binary()
+  @type project :: binary()
 
-
-  @spec run([project_name]) :: gatling_env
+  @spec run([project]) :: gatling_env
   def run([project]) do
     upgrade(project)
   end
 
-  @spec upgrade([project_name]) :: gatling_env
+  @spec upgrade([project]) :: gatling_env
   @doc """
   The main function of `Mix.Tasks.Gatling.Upgrade`
   """
@@ -90,21 +89,31 @@ defmodule Mix.Tasks.Gatling.Upgrade do
 
   @spec upgrade_service(gatling_env) :: gatling_env
   @doc """
-  Leverage Exrm to perform a hot upgrad of the running project
+  Leverage Exrm to perform a hot upgrade of the running project
   """
   def upgrade_service(env) do
     bash("service", ~w[#{env.project} upgrade #{env.version}], [])
     env
   end
 
-  defp call(env, action) do
+  @spec call(gatling_env, :before | :after) :: gatling_env
+  @doc """
+  Wrapper function for every action.
+
+  Executes the `:before_<action>` and `:after_<action>` functions defined in `/upgrade`.
+  """
+  def call(env, action) do
     callback(env, action, :before)
     apply(__MODULE__, action, [env])
     callback(env, action, :after)
     env
   end
 
-  defp callback(env, action, type) do
+  @spec callback(gatling_env, atom(), :before | :after) :: gatling_env
+  @doc """
+  Executes `:before` or `:after` callback function defined in  `/upgrade`.
+  """
+  def callback(env, action, type) do
     module          = env.upgrade_callback_module
     callback_action = [type, action]
                       |> Enum.map(&to_string/1)

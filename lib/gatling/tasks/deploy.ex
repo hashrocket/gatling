@@ -13,14 +13,14 @@ defmodule Mix.Tasks.Gatling.Deploy do
   @shortdoc "Create an exrm release of the given project and deploy it"
 
   @type gatling_env :: %Gatling.Env{}
-  @type project_name :: binary()
+  @type project :: binary()
 
-  @spec run([project_name]) :: gatling_env
+  @spec run([project]) :: gatling_env
   def run([project]) do
     deploy(project)
   end
 
-  @spec deploy([project_name]) :: gatling_env
+  @spec deploy([project]) :: gatling_env
   @doc """
   The main function of `Mix.Tasks.Gatling.Deploy`
   """
@@ -105,7 +105,7 @@ defmodule Mix.Tasks.Gatling.Deploy do
 
   @spec install_init_script(gatling_env) :: gatling_env
   @doc """
-  Create a system.d script and install it in `/etc/init.d/<project_name>`
+  Create a system.d script and install it in `/etc/init.d/<project>`
   If the server restarts, the deploying project will boot automatically.
 
   Also makes the following comands available in your deployment server:
@@ -123,7 +123,8 @@ defmodule Mix.Tasks.Gatling.Deploy do
 
   @spec configure_nginx(gatling_env) :: gatling_env
   @doc """
-  Create an nginx.cong file to configure a reverse proxy to the deploying application. Install the file in: 
+  Create an nginx.cong file to configure a reverse proxy to the 
+  deploying application. Install the file in:
 
   `/etc/nginx/sites-available/<project>`
 
@@ -144,44 +145,54 @@ defmodule Mix.Tasks.Gatling.Deploy do
 
   @spec mix_ecto_setup(gatling_env) :: gatling_env
   @doc """
-  If the task 'mix ecto.create` is available (it is assumed the deploying application has Ecto) then creat the database, run migrations, and run the seeds file.
+  If the task `mix ecto.create` is available (it is assumed the deploying 
+  application has Ecto) then create the database, run migrations, 
+  and run the seeds file.
   """
   def mix_ecto_setup(%Gatling.Env{}=env) do
-    if Enum.find(env.available_tasks, fn(task)-> task == "ecto.create" end) do
-      bash("mix", ~w[do ecto.create, ecto.migrate, run priv/repo/seeds.exs], cd: env.build_dir)
-      end
-      env
+    if (Enum.find(env.available_tasks, fn(task)-> task == "ecto.create" end)) do
+      bash("mix", ~w[do ecto.create, ecto.migrate, run priv/repo/seeds.exs], [cd: env.build_dir])
     end
 
-    @spec start_service(gatling_env) :: gatling_env
-    @doc """
-      Start the newly created service with `$ service <project> start`
-
-    """
-    def start_service(%Gatling.Env{}=env) do
-      bash("service", ~w[#{env.project} start], env: [{"PORT", to_string(env.available_port)}])
-      env
-    end
-
-    defp call(env, action) do
-      callback(env, action, :before)
-      apply(__MODULE__, action, [env])
-      callback(env, action, :after)
-      env
-    end
-
-    defp callback(env, action, type) do
-      module          = env.deploy_callback_module
-      callback_action = [type, action]
-                        |> Enum.map(&to_string/1)
-                        |> Enum.join("_")
-                        |> String.to_atom()
-
-      if function_exported?(module, callback_action, 1) do
-        apply(module, callback_action, [env])
-      end
-
-      nil
-    end
-
+    env
   end
+
+  @spec start_service(gatling_env) :: gatling_env
+  @doc "Start the newly created service with `$ service <project> start`"
+  def start_service(%Gatling.Env{}=env) do
+    bash("service", ~w[#{env.project} start], env: [{"PORT", to_string(env.available_port)}])
+    env
+  end
+
+  @spec call(gatling_env, :before | :after) :: gatling_env
+  @doc """
+  Wrapper function for every action.
+
+  Executes the `:before_<action>` and `:after_<action>` functions defined in `/deploy`.
+  """
+  def call(env, action) do
+    callback(env, action, :before)
+    apply(__MODULE__, action, [env])
+    callback(env, action, :after)
+    env
+  end
+
+  @spec callback(gatling_env, atom(), :before | :after) :: gatling_env
+  @doc """
+  Executes `:before` or `:after` callback function defined in  `/deploy`.
+  """
+  def callback(env, action, type) do
+    module          = env.deploy_callback_module
+    callback_action = [type, action]
+                      |> Enum.map(&to_string/1)
+                      |> Enum.join("_")
+                      |> String.to_atom()
+
+    if function_exported?(module, callback_action, 1) do
+      apply(module, callback_action, [env])
+    end
+
+    nil
+  end
+
+end

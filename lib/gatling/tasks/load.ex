@@ -5,11 +5,15 @@ defmodule Mix.Tasks.Gatling.Load do
   import Gatling.Utilities
 
   @moduledoc """
-    Create a git repository for your mix project. The name of the project must match `:app` in your mix.exs
+    Create a git repository for your mix project.
+    The `project` must match `:app` in your mix.exs
   """
 
   @shortdoc "Create a git repository or your mix project"
 
+  @type project :: binary()
+
+  @spec run([project]) :: nil
   def run([]) do
     project = Mix.Shell.IO.prompt("Please enter a project name:")
     load(project)
@@ -19,6 +23,12 @@ defmodule Mix.Tasks.Gatling.Load do
     load(project)
   end
 
+  @spec load([project]) :: nil
+  @doc """
+  Create an empty git repository of the given project
+
+  The repository contains a `post-update` hook that triggers the hot upgrade from future git pushes
+  """
   def load(project) do
     build_dir = build_dir(project)
     if File.exists?(build_dir) do
@@ -29,10 +39,11 @@ defmodule Mix.Tasks.Gatling.Load do
       bash("git", ~w[config receive.denyCurrentBranch updateInstead], cd: build_dir)
       install_post_receive_hook(project)
     end
+    nil
   end
 
-  def install_post_receive_hook(project) do
-    file = git_hook_template(project_name: project)
+  defp install_post_receive_hook(project) do
+    file = git_hook_template(project: project)
     path = git_hook_path(project)
 
     File.write!(path, file)

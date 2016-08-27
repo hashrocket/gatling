@@ -52,7 +52,7 @@ Add the following to your `.gitignore`:
 Setup your git remote and push to your server:
 
 ```elixir
-$ git remote add production git@<address.to.server>:<project_name>.git`
+$ git remote add production git@<address.to.server>:<project_name>.git
 $ git push production master
 ```
 SSH back into your server, run your migrations, and ensure you have your `secret.exs` file(s) installed if needed
