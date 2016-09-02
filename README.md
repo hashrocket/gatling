@@ -179,7 +179,7 @@ end
 
 And that's it. That function will be called right before `mix deps get`
 
-### Development
+## Development
 
 ```
 $ git clone https://github.com/hashrocket/gatling.git
@@ -189,7 +189,7 @@ $ mix deps.get
 $ git clone https://github.com/hashrocket/gatling_archives.git
 ```
 
-### Releases
+## Releases
 
 To create a new release, take the following steps:
 
@@ -203,7 +203,7 @@ To create a new release, take the following steps:
 
 ---
 
-### About
+## About
 
 [![Hashrocket logo](https://hashrocket.com/hashrocket_logo.svg)](https://hashrocket.com)
 
