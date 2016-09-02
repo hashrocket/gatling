@@ -200,6 +200,7 @@ To create a new release, take the following steps:
 5. `$ git push origin master`
 6. `$ cd ../ && git tag v<version>`
 7. `$ git push origin <tag>`
+
 ---
 
 ### About
