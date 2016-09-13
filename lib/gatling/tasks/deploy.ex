@@ -76,7 +76,7 @@ defmodule Mix.Tasks.Gatling.Deploy do
   """
   def mix_release_init(%Gatling.Env{}=env) do
     if File.exists?(env.release_config_path) do
-      Gatling.Bash.log("#{env.release_config} found")
+      Gatling.Bash.log("#{env.release_config_path} found")
     else
       bash("mix", ~w[release.init --no-doc],cd: env.build_dir)
     end

@@ -27,6 +27,7 @@ defmodule Mix.Tasks.Gatling.Upgrade do
     |> call(:mix_deps_get)
     |> call(:mix_compile)
     |> call(:mix_digest)
+    |> call(:mix_release_init)
     |> call(:mix_release)
     |> call(:make_upgrade_dir)
     |> call(:copy_release_to_upgrade)
@@ -57,6 +58,20 @@ defmodule Mix.Tasks.Gatling.Upgrade do
   """
   def mix_digest(env) do
     bash("mix", ~w[phoenix.digest], cd: env.build_dir)
+    env
+  end
+
+  @spec mix_release_init(gatling_env) :: gatling_env
+  @doc """
+  Look look for `/rel/config.exs`
+  If it doesn't exist, run `mix release.init`
+  """
+  def mix_release_init(%Gatling.Env{}=env) do
+    if File.exists?(env.release_config_path) do
+      Gatling.Bash.log("#{env.release_config_path} found")
+    else
+      bash("mix", ~w[release.init --no-doc],cd: env.build_dir)
+    end
     env
   end
 
