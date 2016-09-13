@@ -217,12 +217,14 @@ $ git clone https://github.com/hashrocket/gatling_archives.git
 To create a new release, take the following steps:
 
 1. Bump your verson number in `mix.exs`
-2. `$ mix build`
-3. `$ cd gatling_archives`
-4. `$ git commit -m "release v<version>"`
-5. `$ git push origin master`
-6. `$ cd ../ && git tag v<version>`
-7. `$ git push origin <tag>`
+2. `git add . && git commit -m 'bump to v<version>'
+3. `$ MIX_ENV=prod mix build`
+4. `$ cd gatling_archives`
+5. `$ git add .`
+6. `$ git commit -m "release v<version>"`
+7. `$ git push origin master`
+8. `$ cd ../ && git tag v<version>`
+9. `$ git push origin <tag>`
 
 ---
 
