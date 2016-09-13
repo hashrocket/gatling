@@ -24,6 +24,13 @@ defmodule Gatling.UtilitiesTest do
     assert Regex.match?(regex, path)
   end
 
+  test ".release_config_path" do
+    expected_path = "/gatling/test/root/home/ubuntu/foo/rel/config.exs"
+    regex = ~r/#{expected_path}$/
+    path = Utilities.release_config_path("foo")
+    assert Regex.match?(regex, path)
+  end
+
   test ".deploy_dir" do
     expected_path = "/gatling/test/root/home/ubuntu/deployments/sample_project"
     regex = ~r/#{expected_path}$/
@@ -51,7 +58,6 @@ defmodule Gatling.UtilitiesTest do
     path = Utilities.upgrade_path("sample_project")
     assert Regex.match?(regex, path)
   end
-
 
   test ".nginx_dir" do
     expected_path = "/gatling/test/root/etc/nginx"

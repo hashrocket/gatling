@@ -18,7 +18,7 @@ defmodule GatlingTest do
 
   def matches?(string, assertion) do
     regex = ~r/#{assertion}/
-    assert(Regex.match?(regex, string), "#{string} \n|doesn't match|\n#{assertion}")
+    assert(Regex.match?(regex, to_string(string)), "#{string} \n|doesn't match|\n#{assertion}")
   end
 
   test ".env" do
@@ -51,6 +51,7 @@ defmodule GatlingTest do
     env.nginx_available_path |>  matches?("/root/etc/nginx/sites-available/sample_project")
     env.nginx_dir            |>  matches?("/root/etc/nginx")
     env.nginx_enabled_path   |>  matches?("/root/etc/nginx/sites-enabled/sample_project")
+    env.release_config_path  |>  matches?("/root/home/ubuntu/sample_project/rel/config.exs")
     env.upgrade_dir          |>  matches?("/root/home/ubuntu/deployments/sample_project/releases/0.0.1470406670")
     env.upgrade_path         |>  matches?("/root/home/ubuntu/deployments/sample_project/releases/0.0.1470406670/sample_project.tar.gz")
 

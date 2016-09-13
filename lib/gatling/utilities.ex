@@ -75,6 +75,19 @@ defmodule Gatling.Utilities do
     Path.join(build_dir.(), project)
   end
 
+  @spec release_config_path(project) :: binary()
+  @doc """
+  Path to Distillery's config.exs file which is generated when calling `mix release.init`
+
+  `~/<project>/rel/config/exs`
+  """
+  def release_config_path(project) do
+    build_dir = Application.get_env(:gatling, :build_dir) || fn ->
+      System.user_home
+    end
+    Path.join([build_dir.(), project, "rel", "config.exs"])
+  end
+
   @spec deploy_dir(project) :: binary()
   @doc """
   Directory to running applications
