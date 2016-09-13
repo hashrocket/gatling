@@ -32,6 +32,7 @@ defmodule Gatling.Mixfile do
       maintainers: ["Micah Cooper", "Hashrocket"],
       links: %{
         "GitHub" => "https://github.com/hashrocket/gatling",
+        "Hashrocket" => "https://hashrocket.com",
       }
     ]
   end
@@ -41,7 +42,7 @@ defmodule Gatling.Mixfile do
   end
 
   defp deps do
-    [ {:ex_doc, ">= 0.0.0"} ]
+    [ {:ex_doc, ">= 0.0.0", only: :dev} ]
   end
 
   defp aliases do
@@ -52,8 +53,8 @@ defmodule Gatling.Mixfile do
     Mix.Tasks.Compile.run([])
     Mix.Tasks.Archive.Build.run([])
     Mix.Tasks.Archive.Build.run(["--output=gatling.ez"])
-    File.rename("gatling.ez", "./archives/gatling.ez")
-    File.rename("gatling-#{version}.ez", "./archives/gatling-#{version}.ez")
+    File.rename("gatling.ez", "./gatling_archives/gatling.ez")
+    File.rename("gatling-#{version}.ez", "./gatling_archives/gatling-#{version}.ez")
   end
 
 end
