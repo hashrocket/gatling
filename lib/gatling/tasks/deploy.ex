@@ -76,7 +76,7 @@ defmodule Mix.Tasks.Gatling.Deploy do
   """
   def mix_release_init(%Gatling.Env{}=env) do
     if File.exists?(env.release_config_path) do
-      Gatling.Bash.log("#{env.release_config_path} found")
+      log("#{env.release_config_path} found")
     else
       bash("mix", ~w[release.init --no-doc],cd: env.build_dir)
     end
@@ -125,16 +125,20 @@ defmodule Mix.Tasks.Gatling.Deploy do
   Create a system.d script and install it in `/etc/init.d/<project>`
   If the server restarts, the deploying project will boot automatically.
 
-  Also makes the following comands available in your deployment server:
+  Also makes the following comands (created by distillery) available in your deployment server:
 
   ```bash
   $ sudo service <project> start|start_boot <file>|foreground|stop|restart|reboot|ping|rpc <m> <f> [<a>]|console|console_clean|console_boot <file>|attach|remote_console|upgrade|escript|command <m> <f> <args>
   ```
   """
   def install_init_script(%Gatling.Env{}=env) do
-    File.write!(env.etc_path, env.script_template)
-    File.chmod!(env.etc_path, 0o777)
-    bash("update-rc.d", ~w[#{env.project} defaults])
+    if File.exists?(env.etc_path) do
+      log("#{env.etc_path} already exists")
+    else
+      File.write!(env.etc_path, env.script_template)
+      File.chmod!(env.etc_path, 0o777)
+      bash("update-rc.d", ~w[#{env.project} defaults])
+    end
     env
   end
 
@@ -150,12 +154,18 @@ defmodule Mix.Tasks.Gatling.Deploy do
   - `/etc/nginx/sites-enabled/<project>`
 
   Then reload nginx's configuration
+  __Note:__ if you already have an nginx.conf file in
+  `/etc/nginx/sites-available/<project>` this will not run.
   """
   def configure_nginx(%{nginx_available_path: available, nginx_enabled_path: enabled} = env) do
     if env.domains do
-      File.write!(available, env.nginx_template)
-      unless File.exists?(enabled), do: File.ln_s(available, enabled)
-      bash("nginx", ~w[-s reload])
+      if File.exists?(enabled) do
+        log("#{env.available} found")
+      else
+        File.write!(available, env.nginx_template)
+        File.ln_s(available, enabled)
+        bash("nginx", ~w[-s reload])
+      end
     end
     env
   end
