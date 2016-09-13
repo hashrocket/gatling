@@ -1,4 +1,4 @@
 #!/bin/sh
 
 unset GIT_DIR
-exec sudo mix gatling.receive <%=@project_name%>
+exec sudo mix gatling.receive <%=@project%>
