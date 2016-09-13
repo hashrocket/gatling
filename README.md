@@ -12,6 +12,11 @@ Gatling is essentially a collection of mix tasks that (from a Git push) automati
 As of Gatling v1.0.0, [Distillery](https://github.com/bitwalker/distillery), is the assumed release building tool as opposed to Exrm.
 If up are upgrading form a previous verison of Gatling, simply change the `exrm` dependency to `distillery` in your `mix.exs` file and you should be good to go.
 
+## Gatling, Distillery and Nginx
+As you read through the instructions, keep in mind that both Distillery and Nginx have tons of options you can configure outside of Gatling. Gatling's goal is is to offer an out-of-the-box solution that keeps out of the way of your custom deployment stategy. For example, Distillery requires a configuration file in `./rel/config.exs` of your project. There is a [lot](https://hexdocs.pm/distillery/configuration.html) you can do with this but if you decide not to install this yourself, Gatling will generate a basic one for you.
+
+Please see the [Distillery](https://hexdocs.pm/distillery/getting-started.html) docs to unlock the full power of your releases while Gatling simply triggers them in a convenient way.
+
 ## Instructions
 
 ### Setting up the server
@@ -68,7 +73,7 @@ Set your environment to `prod` by adding the following to `/etc/environment`
 MIX_ENV=prod
 ```
 
-Now for the initial deploy. Run `$ mix gatling.deploy {project_name}` and Gatling will do the following.
+For the initial deploy. Run `$ mix gatling.deploy {project_name}` and Gatling will do the following.
 - Create a `distillery` release and put all the parts in the right place
 - Find an open port, configure nginx to proxy to your app
 - Create an `init.d` file so your app will boot if/when your server restarts
@@ -101,6 +106,9 @@ defmodule SampleProject.DeployCallbacks do
 
   def before_mix_digest(env)
   def after_mix_digest(env)
+
+  def before_mix_release_init(env)
+  def after_mix_release_init(env)
 
   def before_mix_release(env)
   def after_mix_release(env)
@@ -148,6 +156,9 @@ defmodule SampleProject.UpgradeCallbacks do
   def before_mix_digest(env)
   def after_mix_digest(env)
 
+  def before_mix_release_init(env)
+  def after_mix_release_init(env)
+
   def before_mix_release(env)
   def after_mix_release(env)
 
@@ -164,7 +175,6 @@ end
 ```
 
 __Note:__ the `env` is passed to every function. It is a READ only struct you can use. Returning `env` from a callback function will have no effect on the rest of the upgrade process. [Here](https://github.com/hashrocket/gatling/blob/master/env.example.exs) is an example of the `env` that is passed in.
-
 
 #### System Commands in your callbacks.
 
