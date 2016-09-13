@@ -4,18 +4,40 @@
 
 Conveniently deploy a bunch of Phoenix apps
 
-The main goal of Gatling is to make it very easy, cheap, and convenient to deploy Phoenix apps.
+The main goal of Gatling is to make it very easy, cheap, and convenient to
+deploy Phoenix apps.
 
-Gatling is essentially a collection of mix tasks that (from a Git push) automatically create an Distillery release and launches/upgrades it on your server.
+Gatling is essentially a collection of mix tasks that (from a Git push)
+automatically create an Distillery release and launches/upgrades it on your
+server.
 
 ## NOTE:
-As of Gatling v1.0.0, [Distillery](https://github.com/bitwalker/distillery), is the assumed release building tool as opposed to Exrm.
-If up are upgrading form a previous verison of Gatling, simply change the `exrm` dependency to `distillery` in your `mix.exs` file and you should be good to go.
+As of Gatling v1.0.0, [Distillery](https://github.com/bitwalker/distillery), is
+the assumed release building tool as opposed to Exrm.
+To upgrade from a previous verison of Gatling, take the following steps:
+
+SSH into your deployment server and run
+
+Install at the latest version of gatling:
+
+`mix archive.install https://github.com/hashrocket/gatling_archives/raw/master/gatling.ez`
+
+In your project's `mix.exs`, remove the  `exrm` dependency and add `distillery`
+in its stead
 
 ## Gatling, Distillery and Nginx
-As you read through the instructions, keep in mind that both Distillery and Nginx have tons of options you can configure outside of Gatling. Gatling's goal is is to offer an out-of-the-box solution that keeps out of the way of your custom deployment stategy. For example, Distillery requires a configuration file in `./rel/config.exs` of your project. There is a [lot](https://hexdocs.pm/distillery/configuration.html) you can do with this but if you decide not to install this yourself, Gatling will generate a basic one for you.
+As you read through the instructions, keep in mind that both Distillery and
+Nginx have tons of options you can configure outside of Gatling. Gatling's goal
+is is to offer an out-of-the-box solution that keeps out of the way of your
+custom deployment stategy. For example, Distillery requires a configuration
+file in `./rel/config.exs` of your project. There is a
+[lot](https://hexdocs.pm/distillery/configuration.html) you can do with this
+but if you decide not to install this yourself, Gatling will generate a basic
+one for you.
 
-Please see the [Distillery](https://hexdocs.pm/distillery/getting-started.html) docs to unlock the full power of your releases while Gatling simply triggers them in a convenient way.
+Please see the [Distillery](https://hexdocs.pm/distillery/getting-started.html)
+docs to unlock the full power of your releases while Gatling simply triggers
+them in a convenient way.
 
 ## Instructions
 
@@ -27,7 +49,10 @@ Install elixir, nginx, and the Gatling archive on your server
 ```bash
 $ ssh server.address
 ```
-Follow instructions [here](http://elixir-lang.org/install.html#unix-and-unix-like) to install elixir
+Follow instructions
+[here](http://elixir-lang.org/install.html#unix-and-unix-like) to install
+elixir
+
 ```bash
 $ sudo apt-get install nginx git
 $ mix archive.install https://github.com/hashrocket/gatling_archives/raw/master/gatling.ez
@@ -42,11 +67,19 @@ SSH into your server and run the following:
 ```bash
 $ mix gatling.load {mix project name}
 ```
-Ensure your elixir project can build a production release with [Distillery](https://github.com/bitwalker/distillery)
 
-Add a file to the root of your project named `domains` and  list  all  domains that will point to this project. See an example [here](https://github.com/hashrocket/gatling/tree/master/test/sample_project)
+Ensure your elixir project can build a production release with
+[Distillery](https://github.com/bitwalker/distillery)
 
-In your `config/prod.exs` make sure your `port` configuration uses an environment variable called `PORT` (Gatling will set this for you automatically):
+
+Add a file to the root of your project named `domains` and  list  all  domains
+that will point to this project. See an example
+[here](https://github.com/hashrocket/gatling/tree/master/test/sample_project)
+
+
+In your `config/prod.exs` make sure your `port` configuration uses an
+environment variable called `PORT` (Gatling will set this for you
+automatically):
 
  ```elixir
 config :my_app, MyApp.Endpoint, [
@@ -66,14 +99,18 @@ $ git remote add production user_with_root_access@<address.to.server>:<project_n
 $ git push production master
 ```
 
-SSH back into your server and ensure you have your `secret.exs` file(s) installed if needed
+SSH back into your server and ensure you have your `secret.exs` file(s)
+installed if needed
 
 Set your environment to `prod` by adding the following to `/etc/environment`
+
 ```bash
 MIX_ENV=prod
 ```
 
-For the initial deploy. Run `$ mix gatling.deploy {project_name}` and Gatling will do the following.
+For the initial deploy. Run `$ mix gatling.deploy {project_name}` and Gatling
+will do the following.
+
 - Create a `distillery` release and put all the parts in the right place
 - Find an open port, configure nginx to proxy to your app
 - Create an `init.d` file so your app will boot if/when your server restarts
@@ -82,18 +119,21 @@ For the initial deploy. Run `$ mix gatling.deploy {project_name}` and Gatling wi
 
 Once your app is running do the following:
 
-- Increase the version number of your application. See [here](https://github.com/hashrocket/gatling/blob/master/mix.example.exs) for an example to automatically increase the version number along with your commit.
+- Increase the version number of your application. See
+  [here](https://github.com/hashrocket/gatling/blob/master/mix.example.exs) for
+  an example to automatically increase the version number along with your
+  commit.
 - Commit your new changes
 - `git push path.to.remote:project`
 
-And that's it! You'll see the new version being deployed with no downtime!.
-Thats it!!! You are golden.
+And that's it! You'll see the new version being deployed with no downtime!
 
 ##Callbacks
 
 ### Gatling.Tasks.Deploy
 
-In your project root, create a file called `deploy.ex`. Define any of the following functions to to wrap the Gatling deployment actions:
+In your project root, create a file called `deploy.ex`. Define any of the
+following functions to to wrap the Gatling deployment actions:
 
 ```elixir
 defmodule SampleProject.DeployCallbacks do
@@ -138,11 +178,15 @@ end
 
 ```
 
-__Note:__ the `env` is passed to every function. It is a READ only struct you can use. Returning `env` from a callback function will have no effect on the rest of the deployment process. [Here](/env.example.exs) is an example of the `env` that is passed in.
+__Note:__ the `env` is passed to every function. It is a READ only struct you
+can use. Returning `env` from a callback function will have no effect on the
+rest of the deployment process. [Here](/env.example.exs) is an example of the
+`env` that is passed in.
 
 ### Gatling.Tasks.Upgrade
 
-In your project root, create a file called `upgrade.ex`. Define any of the following functions to to wrap the Gatling upgrade actions:
+In your project root, create a file called `upgrade.ex`. Define any of the
+following functions to to wrap the Gatling upgrade actions:
 
 ```elixir
 defmodule SampleProject.UpgradeCallbacks do
@@ -174,15 +218,22 @@ defmodule SampleProject.UpgradeCallbacks do
 end
 ```
 
-__Note:__ the `env` is passed to every function. It is a READ only struct you can use. Returning `env` from a callback function will have no effect on the rest of the upgrade process. [Here](https://github.com/hashrocket/gatling/blob/master/env.example.exs) is an example of the `env` that is passed in.
+__Note:__ the `env` is passed to every function. It is a READ only struct you
+can use. Returning `env` from a callback function will have no effect on the
+rest of the upgrade process.
+[Here](https://github.com/hashrocket/gatling/blob/master/env.example.exs) is an
+example of the `env` that is passed in.
 
 #### System Commands in your callbacks.
 
-While implementing your callback funtions. If you are going to use `System.cmd/3`, use `bash/3` instead to get a prettier and more transparent output
+While implementing your callback funtions. If you are going to use
+`System.cmd/3`, use `bash/3` instead to get a prettier and more transparent
+output
 
 #### Example
-Say I want to install wget before my dependencies are installed in the `deploy` task.
-I would create a file in my project called `./deploy.ex` with the following:
+Say I want to install wget before my dependencies are installed in the `deploy`
+task.  I would create a file in my project called `./deploy.ex` with the
+following:
 
 ```elixir
 defmodule SampleProject.DeployCallbacks do
@@ -227,7 +278,7 @@ $ git clone https://github.com/hashrocket/gatling_archives.git
 To create a new release, take the following steps:
 
 1. Bump your verson number in `mix.exs`
-2. `git add . && git commit -m 'bump to v<version>'
+2. `git add . && git commit -m 'bump to v<version>'`
 3. `$ MIX_ENV=prod mix build`
 4. `$ cd gatling_archives`
 5. `$ git add .`
@@ -236,13 +287,12 @@ To create a new release, take the following steps:
 8. `$ cd ../ && git tag v<version>`
 9. `$ git push origin <tag>`
 
----
-
 ## About
 
-[![Hashrocket logo](https://hashrocket.com/hashrocket_logo.svg)](https://hashrocket.com)
+[![Hashrocket
+logo](https://hashrocket.com/hashrocket_logo.svg)](https://hashrocket.com)
 
-Gatling is supported by the team at [Hashrocket, a
-multidisciplinary design and development consultancy](https://hashrocket.com). If you'd like to [work with
+Gatling is supported by the team at [Hashrocket, a multidisciplinary design and
+development consultancy](https://hashrocket.com). If you'd like to [work with
 us](https://hashrocket.com/contact-us/hire-us) or [join our
 team](https://hashrocket.com/contact-us/jobs), don't hesitate to get in touch.
