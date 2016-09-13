@@ -80,7 +80,8 @@ defmodule Mix.Tasks.Gatling.Upgrade do
   Generate a release of the deploying project with [Distillery](http://github.com/bitwalker/distillery)
   """
   def mix_release(env) do
-    bash("mix", ~w[release --upgrade --warnings-as-errors --env=prod], cd: env.build_dir)
+    last_release = List.last(env.releases)
+    bash("mix", ~w[release --upfrom=#{last_release} --warnings-as-errors --env=prod], cd: env.build_dir)
     env
   end
 
