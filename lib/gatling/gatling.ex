@@ -29,6 +29,7 @@ defmodule Gatling do
       :nginx_enabled_path      => nginx_enabled_path(project),
       :nginx_template          => nginx_template(domains: domains, port: port),
       :project                 => project,
+      :releases                => releases(project),
       :release_config_path     => release_config_path(project),
       :script_template         => script_template(project_name: project, port: port),
       :upgrade_callback_module => callback_module(project, task: "upgrade"),

@@ -88,6 +88,23 @@ defmodule Gatling.Utilities do
     Path.join([build_dir.(), project, "rel", "config.exs"])
   end
 
+
+  @spec releases(project) :: list(binary())
+  @doc """
+  List all releases found in ~/<project>/rel/<project>/releases
+  """
+  def releases(project) do
+    path = Path.join([build_dir(project), "rel", project, "releases"])
+    if File.exists?(path) do
+      path
+      |> File.ls!()
+      |> Enum.filter(fn item -> File.dir?(Path.join(path, item)) end)
+      |> Enum.sort
+    else
+      []
+    end
+  end
+
   @spec deploy_dir(project) :: binary()
   @doc """
   Directory to running applications

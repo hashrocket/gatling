@@ -40,6 +40,7 @@ defmodule GatlingTest do
     assert env.version                 == "0.0.1470406670"
     assert env.deploy_callback_module  == SampleProject.DeployCallbacks # test/sample_project/deploy.ex
     assert env.upgrade_callback_module == SampleProject.UpgradeCallbacks # test/sample_project/upgrade.ex
+    assert env.releases                == []
 
     env.build_dir            |>  matches?("/root/home/ubuntu/sample_project")
     env.built_release_path   |>  matches?("/root/home/ubuntu/sample_project/rel/sample_project/releases/0.0.1470406670/sample_project.tar.gz")

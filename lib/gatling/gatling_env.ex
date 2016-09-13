@@ -20,6 +20,7 @@ defmodule Gatling.Env do
       nginx_template
       project
       release_config_path
+      releases
       script_template
       upgrade_callback_module
       upgrade_dir

@@ -24,6 +24,17 @@ defmodule Gatling.UtilitiesTest do
     assert Regex.match?(regex, path)
   end
 
+  test ".releases" do
+    releases_path = Path.join([
+      Utilities.build_dir("sample_project"),
+      "rel", "sample_project", "releases", "0.0.123"
+    ])
+    File.mkdir_p(releases_path)
+    releases = Utilities.releases("sample_project")
+    assert releases == ["0.0.123"]
+  end
+
+
   test ".release_config_path" do
     expected_path = "/gatling/test/root/home/ubuntu/foo/rel/config.exs"
     regex = ~r/#{expected_path}$/
