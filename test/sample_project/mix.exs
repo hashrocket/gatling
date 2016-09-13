@@ -14,6 +14,7 @@ defmodule SampleProject.Mixfile do
 
   defp aliases do
     [
+      "release.init": &release_init/1,
       release: &release/1,
       compile:          fn(_)-> IO.puts "Compiled" end,
       "deps.get":       fn(_)-> IO.puts "Downloaded Dependencies" end,
@@ -29,12 +30,13 @@ defmodule SampleProject.Mixfile do
     Mix.Shell.IO.info "version #{version} is ready"
   end
 
-  defp version do
-   "0.0.1470406670"
-    # committed_at = System.cmd("git", ~w[log -1 --date=short --pretty=format:%ct])
-    #                 |> elem(0)
-    # "0.0.#{committed_at}"
+  defp release_init(_) do
+    File.mkdir_p("rel")
+    File.write("rel/config.exs", "hello")
   end
 
+  defp version do
+   "0.0.1470406670"
+  end
 
 end

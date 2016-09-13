@@ -23,6 +23,10 @@ defmodule Gatling.Tasks.DeployUpgradeTest do
   test "Deploy, then upgrade" do
     Mix.Tasks.Gatling.Deploy.run(["sample_project"])
 
+    assert File.exists?(Path.join(
+      [Gatling.Utilities.build_dir("sample_project"), "rel/config.exs"]
+    ))
+
     assert File.exists?(
       Gatling.Utilities.deploy_path("sample_project")
     )

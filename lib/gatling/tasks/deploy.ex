@@ -29,6 +29,7 @@ defmodule Mix.Tasks.Gatling.Deploy do
     |> call(:mix_deps_get)
     |> call(:mix_compile)
     |> call(:mix_digest)
+    |> call(:mix_release_init)
     |> call(:mix_release)
     |> call(:make_deploy_dir)
     |> call(:copy_release_to_deploy)
@@ -59,10 +60,27 @@ defmodule Mix.Tasks.Gatling.Deploy do
 
   @spec mix_digest(gatling_env) :: gatling_env
   @doc """
-  Create static phoenix files
+  Create static phoenix files if the project is a phoenix project
   """
   def mix_digest(%Gatling.Env{}=env) do
-    bash("mix", ~w[phoenix.digest -o public/static], cd: env.build_dir)
+    if (Enum.find(env.available_tasks, fn(task)-> task == "phoenix.digest" end)) do
+      bash("mix", ~w[phoenix.digest -o public/static], cd: env.build_dir)
+    end
+
+    env
+  end
+
+  @spec mix_release_init(gatling_env) :: gatling_env
+  @doc """
+  Look look for `/rel/config.exs`
+  If it doesn't exist, run `mix release.init`
+  """
+  def mix_release_init(%Gatling.Env{}=env) do
+    if File.exists?(env.release_config_path) do
+      Gatling.Bash.log("#{env.release_config} found")
+    else
+      bash("mix", ~w[release.init --no-doc],cd: env.build_dir)
+    end
     env
   end
 
@@ -71,7 +89,7 @@ defmodule Mix.Tasks.Gatling.Deploy do
   Generate a release of the deploying project with [exrm](http://github.com/bitwalker/exrm)
   """
   def mix_release(%Gatling.Env{}=env) do
-    bash("mix", ~w[release --no-confirm-missing],cd: env.build_dir)
+    bash("mix", ~w[release --warnings-as-errors --env=prod],cd: env.build_dir)
     env
   end
 
