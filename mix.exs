@@ -22,7 +22,7 @@ defmodule Gatling.Mixfile do
   end
 
   defp description do
-    "Enjoy heroku like deployments with Exrm and your own server"
+    "Enjoy heroku like deployments with Distillery and your own server"
   end
 
   defp package do

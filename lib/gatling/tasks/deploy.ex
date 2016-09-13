@@ -10,7 +10,7 @@ defmodule Mix.Tasks.Gatling.Deploy do
   - Configure Nginx go serve it
   """
 
-  @shortdoc "Create an exrm release of the given project and deploy it"
+  @shortdoc "Create a Distillery release of the given project and deploy it"
 
   @type gatling_env :: %Gatling.Env{}
   @type project :: binary()
@@ -64,9 +64,8 @@ defmodule Mix.Tasks.Gatling.Deploy do
   """
   def mix_digest(%Gatling.Env{}=env) do
     if (Enum.find(env.available_tasks, fn(task)-> task == "phoenix.digest" end)) do
-      bash("mix", ~w[phoenix.digest -o public/static], cd: env.build_dir)
+      bash("mix", ~w[phoenix.digest], cd: env.build_dir)
     end
-
     env
   end
 
@@ -86,7 +85,7 @@ defmodule Mix.Tasks.Gatling.Deploy do
 
   @spec mix_release(gatling_env) :: gatling_env
   @doc """
-  Generate a release of the deploying project with [exrm](http://github.com/bitwalker/exrm)
+  Generate a release of the deploying project with [Distillery](http://github.com/bitwalker/distillery)
   """
   def mix_release(%Gatling.Env{}=env) do
     bash("mix", ~w[release --warnings-as-errors --env=prod],cd: env.build_dir)
@@ -114,7 +113,7 @@ defmodule Mix.Tasks.Gatling.Deploy do
 
   @spec expand_release(gatling_env) :: gatling_env
   @doc """
-  Expand the generated Exrm release
+  Expand the generated Distillery release
   """
   def expand_release(%Gatling.Env{}=env) do
     bash("tar", ~w[-xf #{env.project}.tar.gz], cd: env.deploy_dir )
@@ -171,7 +170,6 @@ defmodule Mix.Tasks.Gatling.Deploy do
     if (Enum.find(env.available_tasks, fn(task)-> task == "ecto.create" end)) do
       bash("mix", ~w[do ecto.create, ecto.migrate, run priv/repo/seeds.exs], [cd: env.build_dir])
     end
-
     env
   end
 

@@ -56,13 +56,13 @@ defmodule Mix.Tasks.Gatling.Upgrade do
   Create static phoenix files
   """
   def mix_digest(env) do
-    bash("mix", ~w[phoenix.digest -o public/static], cd: env.build_dir)
+    bash("mix", ~w[phoenix.digest], cd: env.build_dir)
     env
   end
 
   @spec mix_release(gatling_env) :: gatling_env
   @doc """
-  Generate a release of the deploying project with [exrm](http://github.com/bitwalker/exrm)
+  Generate a release of the deploying project with [Distillery](http://github.com/bitwalker/distillery)
   """
   def mix_release(env) do
     bash("mix", ~w[release --upgrade --warnings-as-errors --env=prod], cd: env.build_dir)
@@ -89,7 +89,7 @@ defmodule Mix.Tasks.Gatling.Upgrade do
 
   @spec upgrade_service(gatling_env) :: gatling_env
   @doc """
-  Leverage Exrm to perform a hot upgrade of the running project
+  Leverage Distillery to perform a hot upgrade of the running project
   """
   def upgrade_service(env) do
     bash("service", ~w[#{env.project} upgrade #{env.version}], [])

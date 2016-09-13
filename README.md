@@ -6,7 +6,11 @@ Conveniently deploy a bunch of Phoenix apps
 
 The main goal of Gatling is to make it very easy, cheap, and convenient to deploy Phoenix apps.
 
-Gatling is essentially a collection of mix tasks that (from a Git push) automatically create an Exrm release and launches/upgrades it on your server.
+Gatling is essentially a collection of mix tasks that (from a Git push) automatically create an Distillery release and launches/upgrades it on your server.
+
+## NOTE:
+As of Gatling v1.0.0, [Distillery](https://github.com/bitwalker/distillery), is the assumed release building tool as opposed to Exrm.
+If up are upgrading form a previous verison of Gatling, simply change the `exrm` dependency to `distillery` in your `mix.exs` file and you should be good to go.
 
 ## Instructions
 
@@ -33,15 +37,14 @@ SSH into your server and run the following:
 ```bash
 $ mix gatling.load {mix project name}
 ```
-Ensure your elixir project can build a release with [Exrm](https://github.com/bitwalker/exrm)
+Ensure your elixir project can build a production release with [Distillery](https://github.com/bitwalker/distillery)
 
 Add a file to the root of your project named `domains` and  list  all  domains that will point to this project. See an example [here](https://github.com/hashrocket/gatling/tree/master/test/sample_project)
 
-In your `config/prod.exs` change `cache_static_manifest` to and make sure your `port` configuration uses an environment variable called `PORT`(Gatling will set this for you automatically):
+In your `config/prod.exs` make sure your `port` configuration uses an environment variable called `PORT` (Gatling will set this for you automatically):
 
  ```elixir
 config :my_app, MyApp.Endpoint, [
-  cache_static_manifest: "public/static/manifest.json",
   http: [port: {:system, "PORT"}],
   # root: ".", # add if using Phoenix
   # server: true, # add if using Phoenix
@@ -51,25 +54,22 @@ config :my_app, MyApp.Endpoint, [
 config :phoenix, :serve_endpoints, true # uncomment if your using Phoenix
  ```
 
-Add the following to your `.gitignore`:
-```config
-/public/static
-```
-
 Setup your git remote and push to your server:
 
 ```elixir
-$ git remote add production git@<address.to.server>:<project_name>.git
+$ git remote add production user_with_root_access@<address.to.server>:<project_name>
 $ git push production master
 ```
-SSH back into your server, run your migrations, and ensure you have your `secret.exs` file(s) installed if needed
+
+SSH back into your server and ensure you have your `secret.exs` file(s) installed if needed
+
 Set your environment to `prod` by adding the following to `/etc/environment`
 ```bash
 MIX_ENV=prod
 ```
 
 Now for the initial deploy. Run `$ mix gatling.deploy {project_name}` and Gatling will do the following.
-- Create a `exrm` release and put all the parts in the right place
+- Create a `distillery` release and put all the parts in the right place
 - Find an open port, configure nginx to proxy to your app
 - Create an `init.d` file so your app will boot if/when your server restarts
 
@@ -163,12 +163,12 @@ defmodule SampleProject.UpgradeCallbacks do
 end
 ```
 
-__Note:__ the `env` is passed to every function. It is a READ only struct you can use. Returning `env` from a callback function will have no effect on the rest of the upgrade process. [Here](/env.example.exs) is an example of the `env` that is passed in.
+__Note:__ the `env` is passed to every function. It is a READ only struct you can use. Returning `env` from a callback function will have no effect on the rest of the upgrade process. [Here](https://github.com/hashrocket/gatling/blob/master/env.example.exs) is an example of the `env` that is passed in.
 
 
 #### System Commands in your callbacks.
 
-While implementing your callback funtions. If you are going to use `System.cmd/3`, use `bash/3` instead to get some prettier and more transparent outputs
+While implementing your callback funtions. If you are going to use `System.cmd/3`, use `bash/3` instead to get a prettier and more transparent output
 
 #### Example
 Say I want to install wget before my dependencies are installed in the `deploy` task.
