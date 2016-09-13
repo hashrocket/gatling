@@ -65,7 +65,7 @@ defmodule Mix.Tasks.Gatling.Upgrade do
   Generate a release of the deploying project with [exrm](http://github.com/bitwalker/exrm)
   """
   def mix_release(env) do
-    bash("mix", ~w[release --no-confirm-missing],cd: env.build_dir)
+    bash("mix", ~w[release --upgrade --warnings-as-errors --env=prod], cd: env.build_dir)
     env
   end
 
