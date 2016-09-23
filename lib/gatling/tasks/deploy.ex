@@ -160,7 +160,7 @@ defmodule Mix.Tasks.Gatling.Deploy do
   def configure_nginx(%{nginx_available_path: available, nginx_enabled_path: enabled} = env) do
     if env.domains do
       if File.exists?(enabled) do
-        log("#{env.available} found")
+        log("#{available} found")
       else
         File.write!(available, env.nginx_template)
         File.ln_s(available, enabled)

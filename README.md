@@ -71,11 +71,9 @@ $ mix gatling.load {mix project name}
 Ensure your elixir project can build a production release with
 [Distillery](https://github.com/bitwalker/distillery)
 
-
 Add a file to the root of your project named `domains` and  list  all  domains
 that will point to this project. See an example
 [here](https://github.com/hashrocket/gatling/tree/master/test/sample_project)
-
 
 In your `config/prod.exs` make sure your `port` configuration uses an
 environment variable called `PORT` (Gatling will set this for you
