@@ -81,7 +81,7 @@ defmodule Mix.Tasks.Gatling.Upgrade do
   """
   def mix_release(env) do
     last_release = List.last(env.releases)
-    bash("mix", ~w[release --upfrom=#{last_release} --warnings-as-errors --env=prod], cd: env.build_dir)
+    bash("mix", ~w[release --upgrade --upfrom=#{last_release} --warnings-as-errors --env=prod], cd: env.build_dir)
     env
   end
 
