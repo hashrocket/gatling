@@ -18,7 +18,7 @@ $ ssh server.address
 ```
 Follow instructions [here](http://elixir-lang.org/install.html#unix-and-unix-like) to install elixir
 ```bash
-$ sudo apt-get install nginx
+$ sudo apt-get install nginx git
 $ mix archive.install https://github.com/hashrocket/gatling_archives/raw/master/gatling.ez
 ```
 
