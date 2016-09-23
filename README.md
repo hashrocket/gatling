@@ -58,6 +58,13 @@ $ sudo apt-get install nginx git
 $ mix archive.install https://github.com/hashrocket/gatling_archives/raw/master/gatling.ez
 ```
 
+If needed, install hex and rebar:
+
+```
+mix local.hex
+mix local.rebar
+```
+
 ###  Deploying your app
 
 For a brand new project:
