@@ -1,5 +1,7 @@
 # Gatling
 
+[![Build Status](https://travis-ci.org/hashrocket/gatling.svg?branch=master)](https://travis-ci.org/hashrocket/gatling)
+
 Conveniently deploy a bunch of Phoenix apps
 
 The main goal of Gatling is to make it very easy, cheap, and convenient to deploy Phoenix apps.
