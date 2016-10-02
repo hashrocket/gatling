@@ -1,6 +1,6 @@
 # Gatling
 
-[![Build Status](https://travis-ci.org/hashrocket/gatling.svg?branch=master)](https://travis-ci.org/hashrocket/gatling)
+[![Build Status](https://travis-ci.org/hashrocket/gatling.svg?branch=master)](https://travis-ci.org/hashrocket/gatling) [![Hex Version](https://img.shields.io/hexpm/v/gatling.svg)](https://hex.pm/packages/gatling)
 
 Conveniently deploy a bunch of Phoenix apps
 
