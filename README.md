@@ -43,7 +43,12 @@ In your `config/prod.exs` change `cache_static_manifest` to and make sure your `
 config :my_app, MyApp.Endpoint, [
   cache_static_manifest: "public/static/manifest.json",
   http: [port: {:system, "PORT"}],
+  # root: ".", # add if using Phoenix
+  # server: true, # add if using Phoenix
+  # url: [host: "www.yourdomain.com"], # add if using Phoenix
 ]
+
+config :phoenix, :serve_endpoints, true # uncomment if your using Phoenix
  ```
 
 Add the following to your `.gitignore`:
@@ -174,6 +179,22 @@ defmodule SampleProject.DeployCallbacks do
 
   def before_mix_deps_get(_env) do
     bash("sudo", ~w[apt-get install wget]
+  end
+
+end
+```
+
+Say I want the server to run npm install + brunch build and recompile assets
+
+```elixir
+defmodule SampleProject.DeployCallbacks do
+
+  def after_mix_digest(env) do
+    bash("mkdir", ~w[-p priv/static], cd: env.build_dir)
+    bash("npm", ~w[install], cd: env.build_dir)
+    bash("brunch", ~w[build --production], cd: env.build_dir)
+    bash("mix", ~w[phoenix.digest -o public/static], cd: env.build_dir)
+    env
   end
 
 end
