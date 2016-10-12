@@ -74,6 +74,10 @@ SSH into your server and run the following:
 ```bash
 $ mix gatling.load {mix project name}
 ```
+This only creates git repository on your server. Remember, when pushing to this
+repository, it would be `remote_server_username@address.to_server:<project name>`
+e.g. for a Digital Ocean box, you would push  to
+`root@xx.xx.xx.xx:sample_project`
 
 Ensure your elixir project can build a production release with
 [Distillery](https://github.com/bitwalker/distillery)
