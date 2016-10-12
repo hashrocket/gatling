@@ -238,10 +238,10 @@ defmodule Gatling.Utilities do
 
   @spec callback_module(project, [task: :upgrade|:deploy]) :: module()
   @doc """
-  Module defined in the project under `./upgrade` or `./deploy`
+  Module defined in the project under `./upgrade.exs` or `./deploy.exs`
   """
   def callback_module(project, [task: task_name]) do
-    callback_path = Path.join(build_dir(project), "#{task_name}.ex")
+    callback_path = Path.join(build_dir(project), "#{task_name}.exs")
     if File.exists? callback_path do
       Code.load_file(callback_path) |> List.first() |> elem(0)
     else

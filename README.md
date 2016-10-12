@@ -141,7 +141,7 @@ And that's it! You'll see the new version being deployed with no downtime!
 
 ### Gatling.Tasks.Deploy
 
-In your project root, create a file called `deploy.ex`. Define any of the
+In your project root, create a file called `deploy.exs`. Define any of the
 following functions to to wrap the Gatling deployment actions:
 
 ```elixir
@@ -194,7 +194,7 @@ rest of the deployment process. [Here](/env.example.exs) is an example of the
 
 ### Gatling.Tasks.Upgrade
 
-In your project root, create a file called `upgrade.ex`. Define any of the
+In your project root, create a file called `upgrade.exs`. Define any of the
 following functions to to wrap the Gatling upgrade actions:
 
 ```elixir
@@ -241,7 +241,7 @@ output
 
 #### Example
 Say I want to install wget before my dependencies are installed in the `deploy`
-task.  I would create a file in my project called `./deploy.ex` with the
+task.  I would create a file in my project called `./deploy.exs` with the
 following:
 
 ```elixir
