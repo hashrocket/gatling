@@ -117,7 +117,7 @@ Set your environment to `prod` by adding the following to `/etc/environment`
 MIX_ENV=prod
 ```
 
-For the initial deploy. Run `$ mix gatling.deploy {project_name}` and Gatling
+For the initial deploy. Run `$ sudo mix gatling.deploy {project_name}` and Gatling
 will do the following.
 
 - Create a `distillery` release and put all the parts in the right place
