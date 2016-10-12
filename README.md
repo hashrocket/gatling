@@ -183,6 +183,7 @@ defmodule SampleProject.DeployCallbacks do
 
 end
 ```
+This function will be called right before `mix deps get`
 
 Say I want the server to run npm install + brunch build and recompile assets
 
@@ -199,8 +200,7 @@ defmodule SampleProject.DeployCallbacks do
 
 end
 ```
-
-And that's it. That function will be called right before `mix deps get`
+This function will be called right after `mix digest`
 
 ## Development
 
