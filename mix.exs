@@ -55,6 +55,9 @@ defmodule Gatling.Mixfile do
     Mix.Tasks.Archive.Build.run(["--output=gatling.ez"])
     File.rename("gatling.ez", "./gatling_archives/gatling.ez")
     File.rename("gatling-#{version}.ez", "./gatling_archives/gatling-#{version}.ez")
+    archives_readme = File.read!("./gatling_archives/README.md")
+    new_readme = Regex.replace(~r/__.+__/, archives_readme, "__#{version}__")
+    File.write("./gatling_archives/README.md", new_readme)
   end
 
 end

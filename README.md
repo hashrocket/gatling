@@ -288,7 +288,7 @@ To create a new release, take the following steps:
 
 1. Bump your verson number in `mix.exs`
 2. `git add . && git commit -m 'bump to v<version>'`
-3. `$ MIX_ENV=prod mix build`
+3. `$ MIX_ENV=prod mix do compile, build`
 4. `$ cd gatling_archives`
 5. `$ git add .`
 6. `$ git commit -m "release v<version>"`
