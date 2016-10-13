@@ -146,6 +146,7 @@ following functions to to wrap the Gatling deployment actions:
 
 ```elixir
 defmodule SampleProject.DeployCallbacks do
+  import Gatling.Bash
 
   def before_mix_deps_get(env)
   def after_mix_deps_get(env)
@@ -199,6 +200,7 @@ following functions to to wrap the Gatling upgrade actions:
 
 ```elixir
 defmodule SampleProject.UpgradeCallbacks do
+  import Gatling.Bash
 
   def before_mix_deps_get(env)
   def after_mix_deps_get(env)
@@ -236,8 +238,8 @@ example of the `env` that is passed in.
 #### System Commands in your callbacks.
 
 While implementing your callback funtions. If you are going to use
-`System.cmd/3`, use `bash/3` instead to get a prettier and more transparent
-output
+`System.cmd/3`, you can instead add `import Gatling.Bash` to the top of your
+module and use `bash/3` to get a more transparent output
 
 #### Example
 Say I want to install wget before my dependencies are installed in the `deploy`
