@@ -26,6 +26,25 @@ defmodule Gatling.Utilities do
     Path.join([nginx_dir, "sites-available", project])
   end
 
+  @spec nginx_config(project) :: binary()
+  @doc """
+  Nginx Configuration file used to override the default `nginx_template`.
+
+  Add to your project root in`./nginx.conf`. Must be a valid config file.
+
+  __NOTE__: If you plan on using you own `nginx.conf`, make sure to manually
+  set the `port` of your application to match your `nginx.conf`. Do not use the
+  `PORT` environment variable in your application config as the port your
+  application is running on will not match that which nginx is proxying to.
+  """
+  def nginx_config(project) do
+    nginx_config_path = Path.join(build_dir(project), "nginx.conf")
+    case File.read(nginx_config_path) do
+      {:ok, config_file} -> config_file
+      {:error, _} -> nil
+    end
+  end
+
   @spec nginx_enabled_path(project) :: binary()
   @doc """
   Default system path to nginx sites-enabled

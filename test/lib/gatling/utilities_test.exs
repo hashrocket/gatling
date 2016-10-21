@@ -34,7 +34,6 @@ defmodule Gatling.UtilitiesTest do
     assert releases == ["0.0.123"]
   end
 
-
   test ".release_config_path" do
     expected_path = "/gatling/test/root/home/ubuntu/foo/rel/config.exs"
     regex = ~r/#{expected_path}$/
@@ -75,6 +74,15 @@ defmodule Gatling.UtilitiesTest do
     regex = ~r/#{expected_path}$/
     path = Utilities.nginx_dir
     assert Regex.match?(regex, path)
+  end
+
+  test ".nginx_config" do
+    regex = ~r/server/
+    config_file = Utilities.nginx_config("sample_project")
+    assert Regex.match?(regex, config_file), """
+    #{inspect regex} didn't match anything in:
+    #{config_file}
+    """
   end
 
   test ".etc_dir" do
