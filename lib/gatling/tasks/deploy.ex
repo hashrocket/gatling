@@ -210,8 +210,7 @@ defmodule Mix.Tasks.Gatling.Deploy do
   def callback(env, action, type) do
     module          = env.deploy_callback_module
     callback_action = [type, action]
-                      |> Enum.map(&to_string/1)
-                      |> Enum.join("_")
+                      |> Enum.map_join("_", &to_string/1)
                       |> String.to_atom()
 
     if function_exported?(module, callback_action, 1) do
