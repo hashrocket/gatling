@@ -98,7 +98,7 @@ defmodule Mix.Tasks.Gatling.Deploy do
 
   """
   def make_deploy_dir(%Gatling.Env{}=env) do
-    File.mkdir_p!(env.deploy_dir)
+    File.mkdir_p(env.deploy_dir)
     env
   end
 

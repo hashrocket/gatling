@@ -31,14 +31,24 @@ defmodule Mix.Tasks.Gatling.Load do
   """
   def load(project) do
     build_dir = build_dir(project)
+
     if File.exists?(build_dir) do
       log(~s(#{build_dir} already exists))
     else
       File.mkdir_p!(build_dir)
+      log("Created #{build_dir}")
       bash("git", ["init", build_dir], [])
       bash("git", ~w[config receive.denyCurrentBranch updateInstead], cd: build_dir)
       install_post_receive_hook(project)
     end
+
+    deploy_dir = deploy_dir(project)
+
+    unless File.exists?(deploy_dir) do
+      File.mkdir_p!(deploy_dir)
+      log("Created #{deploy_dir}")
+    end
+
     nil
   end
 
