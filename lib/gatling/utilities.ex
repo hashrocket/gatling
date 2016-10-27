@@ -147,6 +147,16 @@ defmodule Gatling.Utilities do
     Path.join [deploy_dir(project), "#{project}.tar.gz"]
   end
 
+  @spec config_path(project) :: binary()
+  @doc """
+  Path to deployed project's .env file
+
+  `~/deployments/<project>/.env`
+  """
+  def config_path(project) do
+    Path.join [deploy_dir(project), ".env"]
+  end
+
   @spec upgrade_dir(project) :: binary()
   @doc """
   Path to put the "upgrade" releases
