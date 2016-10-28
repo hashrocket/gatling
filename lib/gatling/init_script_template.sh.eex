@@ -13,4 +13,6 @@ export MIX_ENV=prod
 export PORT=<%= @port %>
 export HOME=<%= System.user_home %>/deployments/<%= @project_name %>
 
+export $(cat <%= System.user_home %>/deployments/<%= @project_name %>/.env)
+
 <%= System.user_home %>/deployments/<%=@project_name%>/bin/<%=@project_name%> "$1" "$2"
