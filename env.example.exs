@@ -24,7 +24,7 @@
  project: "sample_project",
  release_config_path: "/root/home/ubuntu/sample_project/rel/config.exs",
  releases: [],
- script_template: "#!/bin/sh\n\n### BEGIN INIT INFO\n# Provides:          sample_project\n# Required-Start:    $local_fs $network $named $time $syslog\n# Required-Stop:     $local_fs $network $named $time $syslog\n# Default-Start:     2 3 4 5\n# Default-Stop:      0 1 6\n# Description:       Plug Application: sample_project\n### END INIT INFO\n\nexport MIX_ENV=prod\nexport PORT=4001\nexport HOME=/home/micah/deployments/sample_project\n\n/home/micah/deployments/sample_project/bin/sample_project \"$1\" \"$2\"\n",
+ script_template: "#!/bin/sh\n\n### BEGIN INIT INFO\n# Provides:          sample_project\n# Required-Start:    $local_fs $network $named $time $syslog\n# Required-Stop:     $local_fs $network $named $time $syslog\n# Default-Start:     2 3 4 5\n# Default-Stop:      0 1 6\n# Description:       Plug Application: sample_project\n### END INIT INFO\n\nexport MIX_ENV=prod\nexport PORT=4001\nexport HOME=/home/micah/deployments/sample_project\n\nexport $(cat /home/micah/deployments/sample_project/.env)\n\n/home/micah/deployments/sample_project/bin/sample_project \"$1\" \"$2\"\n",
  upgrade_callback_module: SampleProject.UpgradeCallbacks,
  upgrade_dir: "/root/home/ubuntu/deployments/sample_project/releases/0.0.1470406670",
  upgrade_path: "/root/home/ubuntu/deployments/sample_project/releases/0.0.1470406670/sample_project.tar.gz",
