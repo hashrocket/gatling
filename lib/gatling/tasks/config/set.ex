@@ -4,6 +4,19 @@ defmodule Mix.Tasks.Gatling.Config.Set do
 
   @moduledoc """
   Set Environment variables for the given project
+
+  This mix task is for setting environment variables in a given Gatling
+  project.
+
+  ## Example
+
+  ```
+  mix gatling.config.set <project> --DATABASE_PASSWORD=password  --api-url=http://example.com
+
+  #=> Updated Config for <project> (~/deployments/<project>/.env):
+      DATABASE_PASSWORD=password
+      API_URL=http://example.com
+  ```
   """
   @shortdoc "Set Environment Variables For a Project"
 
