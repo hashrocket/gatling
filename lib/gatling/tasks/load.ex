@@ -5,11 +5,17 @@ defmodule Mix.Tasks.Gatling.Load do
   import Gatling.Utilities
 
   @moduledoc """
-    Create a git repository for your mix project.
-    The `project` must match `:app` in your mix.exs
+    This is the first mix task to run when creating a new Gatling project.
+
+    `mix gatling.load <project_name>` will perform:
+
+    __IMPORTANT_NOTE__: The `<project_name>` must match `:app` in your mix.exs
+
+    - Create a git repository for your mix project
+    - Create a deployment directory for your mix project at `~/deployments/<project_name>`
   """
 
-  @shortdoc "Create a git repository or your mix project"
+  @shortdoc "Load a new Gatling project to deploy to"
 
   @type project :: binary()
 
