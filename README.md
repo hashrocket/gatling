@@ -248,7 +248,8 @@ following:
 
 ```elixir
 defmodule SampleProject.DeployCallbacks do
-
+  import Gatling.Bash
+  
   def before_mix_deps_get(_env) do
     bash("sudo", ~w[apt-get install wget]
   end
@@ -261,7 +262,8 @@ Say I want the server to run npm install + brunch build and recompile assets
 
 ```elixir
 defmodule SampleProject.DeployCallbacks do
-
+  import Gatling.Bash
+  
   def after_mix_digest(env) do
     bash("mkdir", ~w[-p priv/static], cd: env.build_dir) # optional: release may complain about this directory not existing
     bash("npm", ~w[install], cd: env.build_dir)
