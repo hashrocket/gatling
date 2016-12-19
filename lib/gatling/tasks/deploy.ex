@@ -128,7 +128,7 @@ defmodule Mix.Tasks.Gatling.Deploy do
   Also makes the following comands (created by distillery) available in your deployment server:
 
   ```bash
-  $ sudo service <project> start|start_boot <file>|foreground|stop|restart|reboot|ping|rpc <m> <f> [<a>]|console|console_clean|console_boot <file>|attach|remote_console|upgrade|escript|command <m> <f> <args>
+  $ sudo --preserve-env service <project> start|start_boot <file>|foreground|stop|restart|reboot|ping|rpc <m> <f> [<a>]|console|console_clean|console_boot <file>|attach|remote_console|upgrade|escript|command <m> <f> <args>
   ```
   """
   def install_init_script(%Gatling.Env{}=env) do
