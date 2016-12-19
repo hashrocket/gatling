@@ -144,7 +144,7 @@ defmodule Mix.Tasks.Gatling.Deploy do
 
   @spec configure_nginx(gatling_env) :: gatling_env
   @doc """
-  Create an nginx.cong file to configure a reverse proxy to the 
+  Create an nginx.cong file to configure a reverse proxy to the
   deploying application. Install the file in:
 
   `/etc/nginx/sites-available/<project>`
@@ -172,13 +172,13 @@ defmodule Mix.Tasks.Gatling.Deploy do
 
   @spec mix_ecto_setup(gatling_env) :: gatling_env
   @doc """
-  If the task `mix ecto.create` is available (it is assumed the deploying 
-  application has Ecto) then create the database, run migrations, 
+  If the task `mix ecto.create` is available (it is assumed the deploying
+  application has Ecto) then create the database, run migrations,
   and run the seeds file.
   """
   def mix_ecto_setup(%Gatling.Env{}=env) do
     if (Enum.find(env.available_tasks, fn(task)-> task == "ecto.create" end)) do
-      bash("mix", ~w[do ecto.create, ecto.migrate, run priv/repo/seeds.exs], [cd: env.build_dir])
+      bash("mix", ~w[ecto.setup], [cd: env.build_dir])
     end
     env
   end
