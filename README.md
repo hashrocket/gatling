@@ -117,7 +117,7 @@ Set your environment to `prod` by adding the following to `/etc/environment`
 MIX_ENV=prod
 ```
 
-For the initial deploy. Run `$ sudo mix gatling.deploy {project_name}` and Gatling
+For the initial deploy. Run `$ sudo --preserve-env mix gatling.deploy {project_name}` and Gatling
 will do the following.
 
 - Create a `distillery` release and put all the parts in the right place
@@ -242,37 +242,50 @@ While implementing your callback funtions. If you are going to use
 module and use `bash/3` to get a more transparent output
 
 #### Example
-Say I want to install wget before my dependencies are installed in the `deploy`
-task.  I would create a file in my project called `./deploy.exs` with the
-following:
+
+##### Deploy Callbacks
+
+Say I want to install wget before my dependencies are installed in the `deploy` task.
+Also I want to avoid complaints about the priv/static directory not existing.
+I would create a file in my project called `./deploy.exs` with the following:
 
 ```elixir
 defmodule SampleProject.DeployCallbacks do
+  import Gatling.Bash
 
   def before_mix_deps_get(_env) do
     bash("sudo", ~w[apt-get install wget]
   end
 
-end
-```
-This function will be called right before `mix deps get`
+  def before_mix_digest(env) do
+    # optional: release may complain about this directory not existing
+    bash("mkdir", ~w[-p priv/static], cd: env.build_dir)
 
-Say I want the server to run npm install + brunch build and recompile assets
-
-```elixir
-defmodule SampleProject.DeployCallbacks do
-
-  def after_mix_digest(env) do
-    bash("mkdir", ~w[-p priv/static], cd: env.build_dir) # optional: release may complain about this directory not existing
-    bash("npm", ~w[install], cd: env.build_dir)
-    bash("brunch", ~w[build --production], cd: env.build_dir)
-    bash("mix", ~w[phoenix.digest -o public/static], cd: env.build_dir)
-    env
+    # you might also want to add the asset compiling here.
+    # see the upgrade example below for details.
   end
 
 end
 ```
-This function will be called right after `mix digest`
+
+This wget install function will be called right before `mix deps get` and the
+`mkdir` will happen before `mix phoenix.digest`.
+
+##### Upgrade Callbacks
+
+Say I want the server to run `npm install` and recompile assets on upgrade:
+
+```elixir
+defmodule SampleProject.UpgradeCallbacks do
+  import Gatling.Bash
+
+  def before_mix_digest(env) do
+    bash("npm", ~w[install], cd: env.build_dir)
+    bash("npm", ~w[run deploy], cd: env.build_dir)
+  end
+
+end
+```
 
 ## Development
 
