@@ -28,7 +28,7 @@ in its stead
 ## Gatling, Distillery and Nginx
 As you read through the instructions, keep in mind that both Distillery and
 Nginx have tons of options you can configure outside of Gatling. Gatling's goal
-is is to offer an out-of-the-box solution that keeps out of the way of your
+is to offer an out-of-the-box solution that keeps out of the way of your
 custom deployment stategy. For example, Distillery requires a configuration
 file in `./rel/config.exs` of your project. There is a
 [lot](https://hexdocs.pm/distillery/configuration.html) you can do with this
