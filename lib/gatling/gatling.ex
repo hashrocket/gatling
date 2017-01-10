@@ -10,7 +10,7 @@ defmodule Gatling do
   @spec env(project, [{:atom, integer()}]) :: gatling_env
 
   def env(project, [port: port] \\ [port: nil]) do
-    port = if port == :find, do: available_port, else: port
+    port = if port == :find, do: available_port(), else: port
     domains = domains(project)
     %Gatling.Env{
       :available_port          => port,
@@ -21,11 +21,11 @@ defmodule Gatling do
       :deploy_dir              => deploy_dir(project),
       :deploy_path             => deploy_path(project),
       :domains                 => domains,
-      :etc_dir                 => etc_dir,
+      :etc_dir                 => etc_dir(),
       :etc_path                => etc_path(project),
       :git_hook_path           => git_hook_path(project),
       :nginx_available_path    => nginx_available_path(project),
-      :nginx_dir               => nginx_dir,
+      :nginx_dir               => nginx_dir(),
       :nginx_enabled_path      => nginx_enabled_path(project),
       :nginx_template          => nginx_template(domains: domains, port: port),
       :project                 => project,

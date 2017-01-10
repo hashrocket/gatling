@@ -5,16 +5,16 @@ defmodule Gatling.Mixfile do
   def project do
     [
       app: :gatling,
-      version: version,
+      version: version(),
       elixir: "~> 1.3",
       build_embedded: Mix.env == :prod,
       start_permanent: Mix.env == :prod,
       name: "Gatling",
       source_url: "https://github.com/hashrocket/gatling",
-      package: package,
-      description: description,
-      aliases: aliases,
-      deps: deps,
+      package: package(),
+      description: description(),
+      aliases: aliases(),
+      deps: deps(),
       docs: [
         extras: [ "README.md" ]
       ],
@@ -54,9 +54,9 @@ defmodule Gatling.Mixfile do
     Mix.Tasks.Archive.Build.run([])
     Mix.Tasks.Archive.Build.run(["--output=gatling.ez"])
     File.rename("gatling.ez", "./gatling_archives/gatling.ez")
-    File.rename("gatling-#{version}.ez", "./gatling_archives/gatling-#{version}.ez")
+    File.rename("gatling-#{version()}.ez", "./gatling_archives/gatling-#{version()}.ez")
     archives_readme = File.read!("./gatling_archives/README.md")
-    new_readme = Regex.replace(~r/__.+__/, archives_readme, "__#{version}__")
+    new_readme = Regex.replace(~r/__.+__/, archives_readme, "__#{version()}__")
     File.write("./gatling_archives/README.md", new_readme)
   end
 

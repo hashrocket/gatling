@@ -23,7 +23,7 @@ defmodule Gatling.Utilities do
   `/etc/nginx/sites-available/`
   """
   def nginx_available_path(project) do
-    Path.join([nginx_dir, "sites-available", project])
+    Path.join([nginx_dir(), "sites-available", project])
   end
 
   @spec nginx_config(project) :: binary()
@@ -52,7 +52,7 @@ defmodule Gatling.Utilities do
   `/etc/nginx/sites-enabeld`
   """
   def nginx_enabled_path(project) do
-    Path.join([nginx_dir, "sites-enabled", project])
+    Path.join([nginx_dir(), "sites-enabled", project])
   end
 
   @spec etc_dir() :: binary()
@@ -72,7 +72,7 @@ defmodule Gatling.Utilities do
   `/etc/init.d/<project>`
   """
   def etc_path(project) do
-    Path.join(etc_dir, project)
+    Path.join(etc_dir(), project)
   end
 
   @spec build_dir(project) :: binary()
