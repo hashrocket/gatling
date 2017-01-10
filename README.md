@@ -295,6 +295,11 @@ defmodule SampleProject.UpgradeCallbacks do
 end
 ```
 
+### Guides and Resources
+
+- [How I Built My Own Heroku for Phoenix Apps](https://hashrocket.com/blog/posts/how-i-built-my-own-heroku-for-phoenix-apps-part-1)
+- [Deploying Phoenix on Ubuntu with Gatling](https://dennisreimann.de/articles/phoenix-deployment-gatling-ubuntu-digital-ocean.html)
+
 ## Development
 
 ```
