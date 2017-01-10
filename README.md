@@ -319,10 +319,10 @@ To create a new release, take the following steps:
 3. `$ MIX_ENV=prod mix do compile, build`
 4. `$ cd gatling_archives`
 5. `$ git add .`
-6. `$ git commit -m "release v<version>"`
-7. `$ git push origin master`
+6. `$ git commit -m "Release v<version>" && git tag v<version>`
+7. `$ git push origin master && git push origin --tags`
 8. `$ cd ../ && git tag v<version>`
-9. `$ git push origin <tag>`
+9. `$ git push origin --tags`
 
 ## About
 
