@@ -276,7 +276,8 @@ This wget install function will be called right before `mix deps get` and the
 
 ##### Upgrade Callbacks
 
-Say I want the server to run `npm install` and recompile assets on upgrade:
+Say I want the server to run `npm install` and recompile assets as well as
+migrate on upgrade:
 
 ```elixir
 defmodule SampleProject.UpgradeCallbacks do
@@ -285,6 +286,10 @@ defmodule SampleProject.UpgradeCallbacks do
   def before_mix_digest(env) do
     bash("npm", ~w[install], cd: env.build_dir)
     bash("npm", ~w[run deploy], cd: env.build_dir)
+  end
+
+  def before_upgrade_service(env) do
+    bash("mix", ~w[ecto.migrate], cd: env.build_dir)
   end
 
 end
