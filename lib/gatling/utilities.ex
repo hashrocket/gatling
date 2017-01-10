@@ -182,11 +182,13 @@ defmodule Gatling.Utilities do
   @doc """
   Location of the release after it's been generated. Located inside the `build_dir`
 
-  `~/<project>/rel/<project>/releases/<version>/<project>.tar.gz`
+  `~/<project>/_build/prod/rel/<project>/releases/<version>/<project>.tar.gz`
   """
   def built_release_path(project) do
     Path.join([
       build_dir(project),
+      "_build",
+      "prod",
       "rel",
       project,
       "releases",
