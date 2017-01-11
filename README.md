@@ -276,7 +276,8 @@ This wget install function will be called right before `mix deps get` and the
 
 ##### Upgrade Callbacks
 
-Say I want the server to run `npm install` and recompile assets on upgrade:
+Say I want the server to run `npm install` and recompile assets as well as
+migrate on upgrade:
 
 ```elixir
 defmodule SampleProject.UpgradeCallbacks do
@@ -287,8 +288,17 @@ defmodule SampleProject.UpgradeCallbacks do
     bash("npm", ~w[run deploy], cd: env.build_dir)
   end
 
+  def before_upgrade_service(env) do
+    bash("mix", ~w[ecto.migrate], cd: env.build_dir)
+  end
+
 end
 ```
+
+### Guides and Resources
+
+- [How I Built My Own Heroku for Phoenix Apps](https://hashrocket.com/blog/posts/how-i-built-my-own-heroku-for-phoenix-apps-part-1)
+- [Deploying Phoenix on Ubuntu with Gatling](https://dennisreimann.de/articles/phoenix-deployment-gatling-ubuntu-digital-ocean.html)
 
 ## Development
 
