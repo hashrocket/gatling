@@ -118,9 +118,17 @@ defmodule Gatling.Utilities do
       path
       |> File.ls!()
       |> Enum.filter(fn item -> File.dir?(Path.join(path, item)) end)
-      |> Enum.sort
+      |> Enum.sort(&semver_order/2)
     else
       []
+    end
+  end
+
+  defp semver_order(a, b) do
+    case Version.compare(a, b) do
+      :gt -> false
+      :lt -> true
+      :eq -> true
     end
   end
 
