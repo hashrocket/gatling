@@ -3,6 +3,22 @@ defmodule Gatling.UtilitiesTest do
 
   alias Gatling.Utilities
 
+  defp release_dir(version) do
+    Path.join([
+      Utilities.build_dir("sample_project"),
+      "rel", "sample_project", "releases",
+      version
+    ])
+  end
+
+  defp mk_release_dir(version) do
+    File.mkdir_p release_dir(version)
+  end
+
+  defp rm_release_dir(version) do
+    File.rm_rf release_dir(version)
+  end
+
   setup do
     build_dir = Utilities.build_dir("sample_project")
     File.mkdir_p(build_dir)
@@ -24,14 +40,29 @@ defmodule Gatling.UtilitiesTest do
     assert Regex.match?(regex, path)
   end
 
-  test ".releases" do
-    releases_path = Path.join([
-      Utilities.build_dir("sample_project"),
-      "rel", "sample_project", "releases", "0.0.123"
-    ])
-    File.mkdir_p(releases_path)
-    releases = Utilities.releases("sample_project")
-    assert releases == ["0.0.123"]
+  describe ".releases" do
+    test "loads releases" do
+      assert Utilities.releases("sample_project") == []
+
+      version = "0.0.1"
+      mk_release_dir(version)
+      assert Utilities.releases("sample_project") == [version]
+
+      on_exit fn ->
+        rm_release_dir(version)
+      end
+    end
+
+    test "orders releases correctly" do
+      releases = ["0.0.1", "0.0.2", "0.0.9", "0.0.10", "0.0.11", "0.1.0", "0.1.1", "0.1.11", "0.2.0"]
+      for version <- releases, do: mk_release_dir(version)
+
+      assert Utilities.releases("sample_project") == releases
+
+      on_exit fn ->
+        for version <- releases, do: rm_release_dir(version)
+      end
+    end
   end
 
   test ".release_config_path" do
