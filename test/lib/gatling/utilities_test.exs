@@ -107,7 +107,7 @@ defmodule Gatling.UtilitiesTest do
   end
 
    test ".built_release_path" do
-    expected_path = "/gatling/test/root/home/ubuntu/sample_project/rel/sample_project/releases/0.0.1470406670/sample_project.tar.gz"
+    expected_path = "/gatling/test/root/home/ubuntu/sample_project/_build/prod/rel/sample_project/releases/0.0.1470406670/sample_project.tar.gz"
     regex = ~r/#{expected_path}$/
     path = Utilities.built_release_path("sample_project")
     assert Regex.match?(regex, path)

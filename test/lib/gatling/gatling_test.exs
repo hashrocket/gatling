@@ -43,7 +43,7 @@ defmodule GatlingTest do
     assert env.releases                == []
 
     env.build_dir            |>  matches?("/root/home/ubuntu/sample_project")
-    env.built_release_path   |>  matches?("/root/home/ubuntu/sample_project/rel/sample_project/releases/0.0.1470406670/sample_project.tar.gz")
+    env.built_release_path   |>  matches?("/root/home/ubuntu/sample_project/_build/prod/rel/sample_project/releases/0.0.1470406670/sample_project.tar.gz")
     env.deploy_dir           |>  matches?("/root/home/ubuntu/deployments/sample_project")
     env.deploy_path          |>  matches?("/root/home/ubuntu/deployments/sample_project/sample_project.tar.gz")
     env.etc_dir              |>  matches?("/root/etc/init.d")

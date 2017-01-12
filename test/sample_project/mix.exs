@@ -23,9 +23,9 @@ defmodule SampleProject.Mixfile do
   end
 
   defp release(_) do
-    path = "rel/sample_project/releases/#{version}"
+    path = "_build/prod/rel/sample_project/releases/#{version()}"
     File.mkdir_p(path)
-    File.write("rel/sample_project/releases/#{version}/sample_project.txt", "hello")
+    File.write("#{path}/sample_project.txt", "hello")
     System.cmd("tar", ~w[cf sample_project.tar.gz sample_project.txt], cd: path)
     Mix.Shell.IO.info "version #{version} is ready"
   end
