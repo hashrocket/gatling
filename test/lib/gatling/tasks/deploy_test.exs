@@ -1,6 +1,8 @@
 defmodule Gatling.Tasks.DeployUpgradeTest do
   use ExUnit.Case
 
+  import Gatling.TestHelpers
+
   setup do
     build_dir = Gatling.Utilities.build_dir("sample_project")
     File.mkdir_p(build_dir)
@@ -15,41 +17,21 @@ defmodule Gatling.Tasks.DeployUpgradeTest do
       File.rm_rf("test/sample_project/rel")
     end
 
-    IO.puts("")
-
     :ok
   end
 
   test "Deploy, then upgrade" do
     Mix.Tasks.Gatling.Deploy.run(["sample_project"])
 
-    assert File.exists?(Path.join(
-      [Gatling.Utilities.build_dir("sample_project"), "rel/config.exs"]
-    ))
-
-    assert File.exists?(
-      Gatling.Utilities.deploy_path("sample_project")
-    )
-
-    assert File.exists?(Path.join(
-      [Gatling.Utilities.nginx_dir , "sites-available", "sample_project"]
-    ))
-
-    assert File.exists?(Path.join(
-      [Gatling.Utilities.nginx_dir , "sites-enabled", "sample_project"]
-    ))
-
-    assert File.exists?(Path.join(
-      [Gatling.Utilities.etc_dir , "sample_project"]
-    ))
+    assert_exists Path.join([Gatling.Utilities.build_dir("sample_project"), "rel/config.exs"])
+    assert_exists Gatling.Utilities.deploy_path("sample_project")
+    assert_exists Path.join([Gatling.Utilities.nginx_dir , "sites-available", "sample_project"])
+    assert_exists Path.join([Gatling.Utilities.nginx_dir , "sites-enabled", "sample_project"])
+    assert_exists Path.join([Gatling.Utilities.etc_dir , "sample_project"])
 
     Mix.Tasks.Gatling.Upgrade.run(["sample_project"])
 
-    #test/sample_project/mix.exs
-    path = Path.join(
-      [Gatling.Utilities.deploy_dir("sample_project"), "releases", "0.0.1470406670", "sample_project.tar.gz"]
-    )
-    assert File.exists?(path), path
+    assert_exists Path.join([Gatling.Utilities.deploy_dir("sample_project"), "releases", "0.0.1470406670", "sample_project.tar.gz"])
   end
 
 end
