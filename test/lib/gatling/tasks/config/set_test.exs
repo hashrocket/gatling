@@ -9,10 +9,10 @@ defmodule Gatling.Tasks.ConfigTest do
     File.mkdir_p(env_path)
     File.write(config_path, "")
 
-    Mix.Tasks.Gatling.Config.Set.run([
-      "sample_project",
-      "--foo=bar", "--baz=buz", "--QUX=qux"
-    ])
+    options = OptionParser.to_argv([foo: "bar", baz: "buz", qux: "qux"])
+    command = ["sample_project"] ++ options
+
+    Mix.Tasks.Gatling.Config.Set.run(command)
 
     env = File.read!(config_path)
 
@@ -24,9 +24,10 @@ defmodule Gatling.Tasks.ConfigTest do
 
     assert env == expectation
 
-    Mix.Tasks.Gatling.Config.Set.run([
-      "sample_project", "--foo=different", "--new=var"
-    ])
+    options = OptionParser.to_argv([foo: "different", new: "var"])
+    command = ["sample_project"] ++ options
+
+    Mix.Tasks.Gatling.Config.Set.run(command)
 
     config_path = Gatling.Utilities.config_path("sample_project")
     env = File.read!(config_path)
