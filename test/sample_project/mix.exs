@@ -3,8 +3,8 @@ defmodule SampleProject.Mixfile do
 
   def project do
     [app: :sample_project,
-     version: version,
-     aliases: aliases,
+     version: version(),
+     aliases: aliases(),
    ]
   end
 
@@ -27,7 +27,7 @@ defmodule SampleProject.Mixfile do
     File.mkdir_p(path)
     File.write("#{path}/sample_project.txt", "hello")
     System.cmd("tar", ~w[cf sample_project.tar.gz sample_project.txt], cd: path)
-    Mix.Shell.IO.info "version #{version} is ready"
+    Mix.Shell.IO.info "version #{version()} is ready"
   end
 
   defp release_init(_) do
