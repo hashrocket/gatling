@@ -4,7 +4,7 @@ defmodule Mix.Tasks.Gatling.Deploy do
   import Gatling.Bash
 
   @moduledoc """
-  - Create a release of the last commit using EXRM
+  - Create a release of the last commit
   - Create a init script for the app so it will reboot on a server reboot
   - Start the app
   - Configure Nginx go serve it
@@ -78,7 +78,7 @@ defmodule Mix.Tasks.Gatling.Deploy do
     if File.exists?(env.release_config_path) do
       log("#{env.release_config_path} found")
     else
-      bash("mix", ~w[release.init --no-doc],cd: env.build_dir)
+      bash("mix", ~w[release.init --no-doc], cd: env.build_dir)
     end
     env
   end
