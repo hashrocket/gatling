@@ -11,20 +11,12 @@ Gatling is essentially a collection of mix tasks that (from a Git push)
 automatically create a Distillery release and launches/upgrades it on your
 server.
 
-## NOTE:
+## Changelog
 
-As of Gatling v1.0.0, [Distillery](https://github.com/bitwalker/distillery), is
-the assumed release building tool as opposed to Exrm.
-To upgrade from a previous version of Gatling, take the following steps:
+- v1.1.0 catches up with a changed default build directory in Distillery
+- v1.0.0 switches from Exrm to Distillery for packaging releases
 
-SSH into your deployment server and install the latest version of Gatling:
-
-```
-$ mix archive.install https://github.com/hashrocket/gatling_archives/raw/master/gatling.ez
-```
-
-In your project's `mix.exs`, remove the `exrm` dependency and add `distillery`
-in its stead.
+For more information see the [detailed changelog](https://github.com/hashrocket/gatling/CHANGELOG.md).
 
 ## Gatling, Distillery and Nginx
 
