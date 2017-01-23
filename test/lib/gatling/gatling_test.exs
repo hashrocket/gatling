@@ -55,7 +55,6 @@ defmodule GatlingTest do
     env.release_config_path  |>  matches?("/root/home/ubuntu/sample_project/rel/config.exs")
     env.upgrade_dir          |>  matches?("/root/home/ubuntu/deployments/sample_project/releases/0.0.1470406670")
     env.upgrade_path         |>  matches?("/root/home/ubuntu/deployments/sample_project/releases/0.0.1470406670/sample_project.tar.gz")
-
   end
 
 end

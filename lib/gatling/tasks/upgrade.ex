@@ -4,7 +4,7 @@ defmodule Mix.Tasks.Gatling.Upgrade do
   import Gatling.Bash
 
   @moduledoc """
-  - Create a release of the last commit using EXRM
+  - Create a release of the last commit
   - Perform a hot upgrade of the currently running application
   """
 
