@@ -5,8 +5,7 @@ defmodule Gatling.UtilitiesTest do
 
   defp release_dir(version) do
     Path.join([
-      Utilities.build_dir("sample_project"),
-      "rel", "sample_project", "releases",
+      Utilities.releases_path("sample_project"),
       version
     ])
   end
