@@ -88,14 +88,13 @@ defmodule Mix.Tasks.Gatling.Deploy do
   Generate a release of the deploying project with [Distillery](http://github.com/bitwalker/distillery)
   """
   def mix_release(%Gatling.Env{}=env) do
-    bash("mix", ~w[release --warnings-as-errors --env=prod],cd: env.build_dir)
+    bash("mix", ~w[release --warnings-as-errors --env=prod], cd: env.build_dir)
     env
   end
 
   @spec make_deploy_dir(gatling_env) :: gatling_env
   @doc """
   Create a directory in the build path of the `project`
-
   """
   def make_deploy_dir(%Gatling.Env{}=env) do
     File.mkdir_p(env.deploy_dir)
@@ -116,7 +115,7 @@ defmodule Mix.Tasks.Gatling.Deploy do
   Expand the generated Distillery release
   """
   def expand_release(%Gatling.Env{}=env) do
-    bash("tar", ~w[-xf #{env.project}.tar.gz], cd: env.deploy_dir )
+    bash("tar", ~w[-xf #{env.project}.tar.gz], cd: env.deploy_dir)
     env
   end
 
@@ -178,7 +177,7 @@ defmodule Mix.Tasks.Gatling.Deploy do
   """
   def mix_ecto_setup(%Gatling.Env{}=env) do
     if (Enum.find(env.available_tasks, fn(task)-> task == "ecto.create" end)) do
-      bash("mix", ~w[ecto.setup], [cd: env.build_dir])
+      bash("mix", ~w[ecto.setup], cd: env.build_dir)
     end
     env
   end

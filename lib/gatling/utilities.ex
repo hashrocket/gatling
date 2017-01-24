@@ -79,7 +79,7 @@ defmodule Gatling.Utilities do
   @doc """
   Path to the git repo for given project
 
-  This the build steps heppen here:
+  This the build steps happen here:
   - Install dependencies
   - Compile
   - Generate release
@@ -173,7 +173,7 @@ defmodule Gatling.Utilities do
   """
   def upgrade_dir(project) do
     version = version(project)
-    Path.join([ deploy_dir(project), "releases", version])
+    Path.join([deploy_dir(project), "releases", version])
   end
 
   @spec upgrade_path(project) :: binary()

@@ -136,19 +136,19 @@ defmodule Gatling.UtilitiesTest do
     assert Regex.match?(regex, path)
   end
 
-   test ".built_release_path" do
+  test ".built_release_path" do
     expected_path = "/gatling/test/root/home/ubuntu/sample_project/_build/prod/rel/sample_project/releases/0.0.1470406670/sample_project.tar.gz"
     regex = ~r/#{expected_path}$/
     path = Utilities.built_release_path("sample_project")
     assert Regex.match?(regex, path)
-   end
+  end
 
-   test ".git_hook_path" do
+  test ".git_hook_path" do
     expected_path = "/gatling/test/root/home/ubuntu/sample_project/.git/hooks/post-update"
     regex = ~r/#{expected_path}$/
     path = Utilities.git_hook_path("sample_project")
     assert Regex.match?(regex, path), path
-   end
+  end
 
   test ".version" do
     assert Utilities.version("sample_project") == "0.0.1470406670"
