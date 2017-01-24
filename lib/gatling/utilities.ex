@@ -79,7 +79,7 @@ defmodule Gatling.Utilities do
   @doc """
   Path to the git repo for given project
 
-  This the build steps heppen here:
+  This the build steps happen here:
   - Install dependencies
   - Compile
   - Generate release
@@ -110,10 +110,10 @@ defmodule Gatling.Utilities do
 
   @spec releases(project) :: list(binary())
   @doc """
-  List all releases found in ~/<project>/rel/<project>/releases
+  List all releases found in Distillery's releases dir
   """
   def releases(project) do
-    path = Path.join([build_dir(project), "rel", project, "releases"])
+    path = releases_dir(project)
     if File.exists?(path) do
       path
       |> File.ls!()
@@ -173,7 +173,7 @@ defmodule Gatling.Utilities do
   """
   def upgrade_dir(project) do
     version = version(project)
-    Path.join([ deploy_dir(project), "releases", version])
+    Path.join([deploy_dir(project), "releases", version])
   end
 
   @spec upgrade_path(project) :: binary()
@@ -186,6 +186,23 @@ defmodule Gatling.Utilities do
     Path.join(upgrade_dir(project), "#{project}.tar.gz")
   end
 
+  @spec releases_dir(project) :: binary()
+  @doc """
+  Location of Distillery's relases directory inside the `build_dir`
+
+  `~/<project>/_build/prod/rel/<project>/releases`
+  """
+  def releases_dir(project) do
+    Path.join([
+      build_dir(project),
+      "_build",
+      "prod",
+      "rel",
+      project,
+      "releases"
+    ])
+  end
+
   @spec built_release_path(project) :: binary()
   @doc """
   Location of the release after it's been generated. Located inside the `build_dir`
@@ -194,12 +211,7 @@ defmodule Gatling.Utilities do
   """
   def built_release_path(project) do
     Path.join([
-      build_dir(project),
-      "_build",
-      "prod",
-      "rel",
-      project,
-      "releases",
+      releases_dir(project),
       version(project),
       "#{project}.tar.gz",
     ])

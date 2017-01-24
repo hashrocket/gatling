@@ -23,15 +23,17 @@ defmodule Gatling.Tasks.DeployUpgradeTest do
   test "Deploy, then upgrade" do
     Mix.Tasks.Gatling.Deploy.run(["sample_project"])
 
-    assert_exists Path.join([Gatling.Utilities.build_dir("sample_project"), "rel/config.exs"])
+    assert_exists Gatling.Utilities.release_config_path("sample_project")
+    assert_exists Gatling.Utilities.built_release_path("sample_project")
     assert_exists Gatling.Utilities.deploy_path("sample_project")
-    assert_exists Path.join([Gatling.Utilities.nginx_dir , "sites-available", "sample_project"])
-    assert_exists Path.join([Gatling.Utilities.nginx_dir , "sites-enabled", "sample_project"])
-    assert_exists Path.join([Gatling.Utilities.etc_dir , "sample_project"])
+    assert_exists Gatling.Utilities.nginx_available_path("sample_project")
+    assert_exists Gatling.Utilities.nginx_enabled_path("sample_project")
+    assert_exists Gatling.Utilities.etc_path("sample_project")
 
     Mix.Tasks.Gatling.Upgrade.run(["sample_project"])
 
-    assert_exists Path.join([Gatling.Utilities.deploy_dir("sample_project"), "releases", "0.0.1470406670", "sample_project.tar.gz"])
+    assert_exists Gatling.Utilities.built_release_path("sample_project")
+    assert_exists Gatling.Utilities.upgrade_path("sample_project")
   end
 
 end

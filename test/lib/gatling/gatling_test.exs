@@ -25,7 +25,7 @@ defmodule GatlingTest do
     domains = Gatling.Utilities.domains("sample_project")
     env = Gatling.env("sample_project", port: 4001)
 
-    #Write the env to ./env.example.exs for documentation
+    # Write the env to ./env.example.exs for documentation
     example_file = inspect(env, pretty: true)
                     |> String.replace(~r/\"\s*(.+\/test)/, "\"")
     File.write("env.example.exs", example_file)
