@@ -171,13 +171,14 @@ defmodule Mix.Tasks.Gatling.Deploy do
 
   @spec mix_ecto_setup(gatling_env) :: gatling_env
   @doc """
-  If the task `mix ecto.create` is available (it is assumed the deploying
+  If the task `mix ecto.setup` is available (it is assumed the deploying
   application has Ecto) then create the database, run migrations,
   and run the seeds file.
   """
   def mix_ecto_setup(%Gatling.Env{}=env) do
-    if (Enum.find(env.available_tasks, fn(task)-> task == "ecto.create" end)) do
-      bash("mix", ~w[ecto.setup], cd: env.build_dir)
+    if (Enum.find(env.available_tasks, fn(task)-> task == "ecto.setup" end)) do
+      # Provide PORT env variable for ecto.setup as it is needed for the seeds to run.
+      bash("mix", ~w[ecto.setup], cd: env.build_dir, env: [{"PORT", to_string(env.available_port)}])
     end
     env
   end
