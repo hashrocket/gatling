@@ -4,7 +4,8 @@ defmodule Mix.Tasks.Gatling.Receive do
   import Gatling.Utilities
 
   @moduledoc """
-  Run by git's `post-update` hook. Determine whether to deploy the app, or update an existing one.
+  Run by git's `post-update` hook. Upgrades an existing app,
+  otherwise does nothing until the app gets manually deployed.
   """
 
   @shortdoc "Do a hot upgrade on currently deployed project"
@@ -14,7 +15,7 @@ defmodule Mix.Tasks.Gatling.Receive do
 
   @spec run([project]) :: gatling_env
   def run([project]) do
-    if File.exists? deploy_dir(project) do
+    if File.exists? deploy_path(project) do
       Mix.Tasks.Gatling.Upgrade.upgrade(project)
     end
   end

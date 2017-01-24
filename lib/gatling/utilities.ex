@@ -136,7 +136,7 @@ defmodule Gatling.Utilities do
   @doc """
   Directory to running applications
 
-  `~/deployments/`
+  `~/deployments/<project>`
   """
   def deploy_dir(project) do
     deploy_dir = Application.get_env(:gatling, :deploy_dir) || fn ->
@@ -149,7 +149,7 @@ defmodule Gatling.Utilities do
   @doc """
   Path to deployed project
 
-  `~/deployments/<project>`
+  `~/deployments/<project>/<project>.tar.gz`
   """
   def deploy_path(project) do
     Path.join [deploy_dir(project), "#{project}.tar.gz"]
