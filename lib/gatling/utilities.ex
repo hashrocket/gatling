@@ -113,7 +113,7 @@ defmodule Gatling.Utilities do
   List all releases found in Distillery's releases dir
   """
   def releases(project) do
-    path = releases_path(project)
+    path = releases_dir(project)
     if File.exists?(path) do
       path
       |> File.ls!()
@@ -186,13 +186,13 @@ defmodule Gatling.Utilities do
     Path.join(upgrade_dir(project), "#{project}.tar.gz")
   end
 
-  @spec releases_path(project) :: binary()
+  @spec releases_dir(project) :: binary()
   @doc """
   Location of Distillery's relases directory inside the `build_dir`
 
-  `~/<project>/_build/prod/rel/<project/releases`
+  `~/<project>/_build/prod/rel/<project>/releases`
   """
-  def releases_path(project) do
+  def releases_dir(project) do
     Path.join([
       build_dir(project),
       "_build",
@@ -211,7 +211,7 @@ defmodule Gatling.Utilities do
   """
   def built_release_path(project) do
     Path.join([
-      releases_path(project),
+      releases_dir(project),
       version(project),
       "#{project}.tar.gz",
     ])
