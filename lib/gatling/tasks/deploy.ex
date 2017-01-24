@@ -186,7 +186,7 @@ defmodule Mix.Tasks.Gatling.Deploy do
   @spec start_service(gatling_env) :: gatling_env
   @doc "Start the newly created service with `$ service <project> start`"
   def start_service(%Gatling.Env{}=env) do
-    bash("service", ~w[#{env.project} start], env: [{"PORT", to_string(env.available_port)}])
+    bash("service", ~w[#{env.project} start])
     env
   end
 
