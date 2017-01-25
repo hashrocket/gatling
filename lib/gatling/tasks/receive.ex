@@ -21,12 +21,15 @@ defmodule Mix.Tasks.Gatling.Receive do
 
       _ ->
         Mix.Shell.IO.info("""
+
         The app #{project} is not deployed yet.
         Please invoke the initial deployment manually by running the following command:
 
         $ sudo --preserve-env mix gatling.deploy #{project}
 
-        In case you already deployed the app, make sure it is running so that an upgrade can be performed.
+        In case you already deployed the app, make sure it is running so that an upgrade can be performed:
+
+        $ sudo service #{project} start
         """)
     end
   end
