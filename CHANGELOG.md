@@ -1,5 +1,9 @@
 # Gatling Changelog
 
+## v1.1.1
+
+Fixes deployment regressions introduced with v1.1.0
+
 ## v1.1.0
 
 Gatling v1.1.0 catches up with a changed default build directory in Distillery.

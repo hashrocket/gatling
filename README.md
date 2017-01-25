@@ -1,6 +1,7 @@
 # Gatling
 
-[![Build Status](https://travis-ci.org/hashrocket/gatling.svg?branch=master)](https://travis-ci.org/hashrocket/gatling) [![Hex Version](https://img.shields.io/hexpm/v/gatling.svg)](https://hex.pm/packages/gatling)
+[![Build Status](https://travis-ci.org/hashrocket/gatling.svg?branch=master)](https://travis-ci.org/hashrocket/gatling)
+[![Hex Version](https://img.shields.io/hexpm/v/gatling.svg)](https://hex.pm/packages/gatling)
 
 Conveniently deploy a bunch of Phoenix apps
 
@@ -13,6 +14,7 @@ server.
 
 ## Changelog
 
+- v1.1.1 fixes deployment regressions introduced with v1.1.0
 - v1.1.0 catches up with a changed default build directory in Distillery
 - v1.0.0 switches from Exrm to Distillery for packaging releases
 
