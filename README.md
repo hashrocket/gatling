@@ -16,7 +16,7 @@ server.
 - v1.1.0 catches up with a changed default build directory in Distillery
 - v1.0.0 switches from Exrm to Distillery for packaging releases
 
-For more information see the [detailed changelog](https://github.com/hashrocket/gatling/CHANGELOG.md).
+For more information see the [detailed changelog](CHANGELOG.md).
 
 ## Gatling, Distillery and Nginx
 
@@ -79,7 +79,7 @@ Ensure your Elixir project can build a production release with
 
 Add a file to the root of your project named `domains` and list all domains
 that will point to this project. See an example
-[here](https://github.com/hashrocket/gatling/tree/master/test/sample_project).
+[here](test/sample_project).
 
 In your `config/prod.exs`, ensure your `port` configuration uses an
 environment variable called `PORT` (Gatling will set this for you
@@ -124,7 +124,7 @@ will do the following:
 Once your app is running do the following:
 
 - Increase the version number of your application. See
-  [here](https://github.com/hashrocket/gatling/blob/master/mix.example.exs) for
+  [here](mix.example.exs) for
   an example to automatically increase the version number along with your
   commit
 - Commit your new changes
@@ -227,7 +227,7 @@ end
 __Note:__ the `env` is passed to every function. It is a READ only struct you
 can use. Returning `env` from a callback function will have no effect on the
 rest of the upgrade process.
-[Here](https://github.com/hashrocket/gatling/blob/master/env.example.exs) is an
+[Here](env.example.exs) is an
 example of the `env` that is passed in.
 
 #### System Commands In Your Callbacks
