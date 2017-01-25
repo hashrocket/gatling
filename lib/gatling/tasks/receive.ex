@@ -15,7 +15,7 @@ defmodule Mix.Tasks.Gatling.Receive do
 
   @spec run([project]) :: gatling_env
   def run([project]) do
-    case bash("service", ~w[#{project} ping]) do
+    case bash("service", ~w[#{project} ping], into: "") do
       {"pong\n", 0} ->
         Mix.Tasks.Gatling.Upgrade.upgrade(project)
 
