@@ -15,6 +15,12 @@ defmodule Mix.Tasks.Gatling.Deploy do
   @type gatling_env :: %Gatling.Env{}
   @type project :: binary()
 
+  @spec run([project]) :: nil
+  def run([]) do
+    project = Mix.Shell.IO.prompt("Please enter a project name:")
+    deploy(project)
+  end
+
   @spec run([project]) :: gatling_env
   def run([project]) do
     deploy(project)
@@ -143,7 +149,7 @@ defmodule Mix.Tasks.Gatling.Deploy do
 
   @spec configure_nginx(gatling_env) :: gatling_env
   @doc """
-  Create an nginx.cong file to configure a reverse proxy to the
+  Create an nginx.conf file to configure a reverse proxy to the
   deploying application. Install the file in:
 
   `/etc/nginx/sites-available/<project>`

@@ -9,10 +9,12 @@ defmodule Gatling.Bash do
   end
 
   if Mix.env == :test do
-    #ignore commands in test
-    def bash("nginx", _, _), do: Mix.Shell.IO.info "Nginx command"
-    def bash("service", _, _), do: Mix.Shell.IO.info "Service command"
-    def bash("update-rc.d", _, _), do: Mix.Shell.IO.info "Update-rc.d command"
+    # ignore commands in test
+    def bash("nginx", args, _), do: Mix.Shell.IO.info "Command: nginx " <> Enum.join(args, " ")
+    def bash("service", args, _), do: Mix.Shell.IO.info "Command: service " <> Enum.join(args, " ")
+    def bash("systemctl", args, _), do: Mix.Shell.IO.info "Command: systemctl " <> Enum.join(args, " ")
+    def bash("update-rc.d", args, _), do: Mix.Shell.IO.info "Command: update-rc.d " <> Enum.join(args, " ")
+
   end
 
   def bash(command, args, opts) do

@@ -16,9 +16,11 @@ defmodule SampleProject.Mixfile do
     [
       "release.init": &release_init/1,
       release: &release/1,
-      compile:          fn(_)-> IO.puts "Compiled" end,
-      "deps.get":       fn(_)-> IO.puts "Downloaded Dependencies" end,
-      "phoenix.digest": fn(_)-> IO.puts "Assets have been compiled" end,
+      compile:          fn(_)-> IO.puts "Command: mix compile" end,
+      "deps.get":       fn(_)-> IO.puts "Command: mix deps.get" end,
+      "phoenix.digest": fn(_)-> IO.puts "Command: mix phoenix.digest" end,
+      "ecto.setup":     fn(_)-> IO.puts "Command: mix ecto.setup" end,
+      "ecto.drop":      fn(_)-> IO.puts "Command: mix ecto.drop" end,
     ]
   end
 

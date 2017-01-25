@@ -1,5 +1,5 @@
 defmodule Gatling.Tasks.LoadTest do
-  use ExUnit.Case, async: true
+  use ExUnit.Case
 
   import Gatling.TestHelpers
 
