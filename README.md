@@ -48,8 +48,8 @@ $ ssh server.address
 ```
 
 Follow instructions
-[here](http://elixir-lang.org/install.html#unix-and-unix-like) to install
-Elixir.
+[here](http://elixir-lang.org/install.html#unix-and-unix-like)
+to install Elixir.
 
 ```bash
 $ sudo apt-get install nginx git
@@ -229,8 +229,7 @@ end
 __Note:__ the `env` is passed to every function. It is a READ only struct you
 can use. Returning `env` from a callback function will have no effect on the
 rest of the upgrade process.
-[Here](env.example.exs) is an
-example of the `env` that is passed in.
+[Here](env.example.exs) is an example of the `env` that is passed in.
 
 #### System Commands In Your Callbacks
 
@@ -293,6 +292,7 @@ end
 
 - [How I Built My Own Heroku for Phoenix Apps](https://hashrocket.com/blog/posts/how-i-built-my-own-heroku-for-phoenix-apps-part-1)
 - [Deploying Phoenix on Ubuntu with Gatling](https://dennisreimann.de/articles/phoenix-deployment-gatling-ubuntu-digital-ocean.html)
+- [Configuring Nginx for Phoenix applications](https://dennisreimann.de/articles/phoenix-nginx-config.html)
 
 ## Development
 
@@ -300,7 +300,7 @@ end
 $ git clone https://github.com/hashrocket/gatling.git
 $ cd gatling
 $ mix deps.get
-#Clone the archives repo
+# Clone the archives repo
 $ git clone https://github.com/hashrocket/gatling_archives.git
 ```
 
@@ -309,21 +309,22 @@ $ git clone https://github.com/hashrocket/gatling_archives.git
 To create a new release, take the following steps:
 
 1. Bump your version number in `mix.exs`
-2. `git add . && git commit -m 'bump to v<version>'`
+2. `git add . && git commit -m 'Bump to v<version>'`
 3. `$ MIX_ENV=prod mix do compile, build`
 4. `$ cd gatling_archives`
 5. `$ git add .`
 6. `$ git commit -m "Release v<version>" && git tag v<version>`
 7. `$ git push origin master && git push origin --tags`
 8. `$ cd ../ && git tag v<version>`
-9. `$ git push origin --tags`
+9. `$ git push origin master && git push origin --tags`
 
 ## About
 
-[![Hashrocket
-logo](https://hashrocket.com/hashrocket_logo.svg)](https://hashrocket.com)
+[![Hashrocket logo](https://hashrocket.com/hashrocket_logo.svg)](https://hashrocket.com)
 
-Gatling is supported by the team at [Hashrocket, a multidisciplinary design and
-development consultancy](https://hashrocket.com). If you'd like to [work with
-us](https://hashrocket.com/contact-us/hire-us) or [join our
-team](https://hashrocket.com/contact-us/jobs), don't hesitate to get in touch.
+Gatling is supported by the team gatling_archives
+[Hashrocket, a multidisciplinary design and development consultancy](https://hashrocket.com).
+If you'd like to
+[work with us](https://hashrocket.com/contact-us/hire-us) or
+[join our team](https://hashrocket.com/contact-us/jobs),
+don't hesitate to get in touch.
