@@ -250,7 +250,7 @@ defmodule SampleProject.DeployCallbacks do
   import Gatling.Bash
 
   def before_mix_deps_get(_env) do
-    bash("sudo", ~w[apt-get install wget]
+    bash("sudo", ~w[apt-get install wget])
   end
 
   def before_mix_digest(env) do
